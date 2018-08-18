@@ -1,9 +1,14 @@
 <?php
 
-namespace App;
+namespace App\Models\Users;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Permission;
+use Setting;
+use FriendshipRequest;
+use Relationship;
+use UserPost;
 
 class User extends Authenticatable
 {
@@ -32,4 +37,30 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function permissions()
+    {
+        return $this->hasOne(Permission::class, 'user_id');
+    }
+
+    public function settings()
+    {
+        return $this->hasOne(Setting::class, 'user_id');
+    }
+
+    public function friendshipRequests()
+    {
+        return $this->hasMany(FrienshipRequest::class, 'requested_user_id');
+    }
+
+    public function friends()
+    {
+        return $this->hasMany(Relationship::class, 'user_id');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(UserPost::class, 'user_id');
+    }
+
 }
