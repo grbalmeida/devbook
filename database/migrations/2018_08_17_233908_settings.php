@@ -16,12 +16,12 @@ class Settings extends Migration
         Schema::create('settings', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('profile_picture', 150);
-            $table->string('cover_photo', 150);
-            $table->text('biography');
-            $table->string('hometown', 150);
-            $table->string('actual_city', 150);
-            $table->string('occupation', 150);
+            $table->string('profile_picture', 150)->nullable();
+            $table->string('cover_photo', 150)->nullable();
+            $table->text('biography')->nullable();
+            $table->string('hometown', 150)->nullable();
+            $table->string('actual_city', 150)->nullable();
+            $table->string('occupation', 150)->nullable();
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users');
