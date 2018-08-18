@@ -1,8 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Model;
+use GroupPostComment;
+use GroupCommentLike;
 
 class GroupPostComment extends Model
 {
@@ -14,5 +16,15 @@ class GroupPostComment extends Model
 		'user_id',
 		'comment'
 	];
+
+	public function comments()
+	{
+		return $this->hasMany(GroupPostComment::class, 'parent_id');
+	}
+
+	public function likes()
+	{
+		return $this->hasMany(GroupCommentLike::class, 'comment_id');
+	}
 
 }
