@@ -17,6 +17,7 @@ class UserPostsHasComments extends Migration
             $table->increments('id');
             $table->integer('post_id')->unsigned();
             $table->integer('user_id')->unsigned();
+            $table->string('comment');
             $table->timestamps();
             $table->softDeletes();
 
