@@ -1,8 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Model;
+use GroupPostPhoto;
+use GroupPostComment;
+use GroupPostLike;
 
 class GroupPost extends Model
 {
@@ -13,5 +16,20 @@ class GroupPost extends Model
     	'group_id',
     	'post'
     ];
+
+    public function photos()
+    {
+    	return $this->hasMany(GroupPostPhoto::class, 'post_id');
+    }
+
+    public function comments()
+    {
+    	return $this->hasMany(GroupPostComment::class, 'post_id');
+    }
+
+    public function likes()
+    {
+    	return $this->hasMany(GroupPostLike::class, 'post_id');
+    }
 
 }
