@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Users;
+namespace App\Models\Groups;
 
 use Illuminate\Database\Eloquent\Model;
 use GroupPostComment;
