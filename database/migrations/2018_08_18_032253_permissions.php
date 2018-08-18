@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Settings extends Migration
+class Permissions extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,20 @@ class Settings extends Migration
      */
     public function up()
     {
-        Schema::create('settings', function(Blueprint $table) {
+        Schema::create('permissions', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->string('profile_picture', 150);
-            $table->string('cover_photo', 150);
-            $table->text('biography');
-            $table->string('hometown', 150);
-            $table->string('actual_city', 150);
-            $table->string('occupation', 150);
+            $table->boolean('friendship_request');
+            $table->boolean('friends_list');
+            $table->boolean('posts');
+            $table->timestamps();
+            $table->softDeletes();
+
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users');
-        });
+
+        }); 
     }
 
     /**
@@ -36,6 +37,6 @@ class Settings extends Migration
     public function down()
     {
         Schema::dropForeign('user_user_id_foreign');
-        Schema::dropIfExists('settings'); 
+        Schema::dropIfExists('permissions');
     }
 }
