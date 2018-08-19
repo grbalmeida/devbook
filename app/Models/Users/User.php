@@ -4,6 +4,7 @@ namespace App\Models\Users;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Groups\GroupMember;
 use Permission;
 use Setting;
 use FriendshipRequest;
@@ -61,6 +62,11 @@ class User extends Authenticatable
     public function posts()
     {
         return $this->hasMany(UserPost::class, 'user_id');
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(GroupMember::class, 'user_id');
     }
 
 }
