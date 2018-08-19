@@ -17,6 +17,7 @@ class GroupHasMembers extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('group_id')->unsigned();
+            $table->boolean('status');
             $table->timestamps();
             $table->softDeletes();
 
