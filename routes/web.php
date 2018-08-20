@@ -16,12 +16,14 @@ Route::get('/', function () {
 });
 
 Route::prefix('/groups')->group(function() {
-	Route::get('/{group_id}', 'GroupController@index')
-		->name('groups.index');
-	Route::get('/{group_id}/posts/{post_id}', 'GroupController@getPost')
-		->name('groups.post');
-	Route::get('/{group_id}/members', 'GroupController@getMembers')
-		->name('groups.members');
+	Route::prefix('/{group_id}')->group(function($groupId) {
+		Route::get('/', 'GroupController@index')
+			->name('groups.index');
+		Route::get('/posts/{post_id}', 'GroupController@getPost')
+			->name('groups.post');
+		Route::get('/members', 'GroupController@getMembers')
+			->name('groups.members');
+	});
 });
 
 Route::prefix('/profile/{slug}')->group(function($slug) {
