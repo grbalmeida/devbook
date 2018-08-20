@@ -24,7 +24,7 @@ Route::prefix('/groups')->group(function() {
 		->name('groups.members');
 });
 
-Route::prefix('/{slug}')->group(function($slug) {
+Route::prefix('/profile/{slug}')->group(function($slug) {
 	Route::get('/', 'ProfileController@index')
 		->name('profile.index');
 	Route::get('/about', 'ProfileController@getAbout')
@@ -38,3 +38,12 @@ Route::prefix('/{slug}')->group(function($slug) {
 	Route::get('/photos', 'ProfileController@getPhotos')
 		->name('profile.photos');
 });	
+
+Route::prefix('/settings')->group(function() {
+	Route::get('/', 'SettingController@index')
+		->name('settings.index');
+	Route::get('/password', 'SettingController@password')
+		->name('settings.password');
+	Route::get('/privacy', 'SettingController@privacy')
+		->name('settings.privacy');
+});
