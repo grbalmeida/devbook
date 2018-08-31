@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRegistrationRequest;
 
 class HomepageController extends Controller
 {
@@ -12,6 +13,10 @@ class HomepageController extends Controller
     		->with('days', $this->getDays())
     		->with('months', $this->getMonths())
     		->with('years', $this->getYears());
+    }
+
+    public function store(UserRegistrationRequest $request) {
+    	$request->validated();
     }
 
     public function getDays() 
