@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomepageController@index');
 
 Route::prefix('/groups')->group(function() {
 	Route::prefix('/{group_id}')->group(function($groupId) {
