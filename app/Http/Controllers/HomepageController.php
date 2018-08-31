@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRegistrationRequest;
+use App\Models\Users\User;
 
 class HomepageController extends Controller
 {
@@ -17,6 +18,21 @@ class HomepageController extends Controller
 
     public function store(UserRegistrationRequest $request) {
     	$request->validated();
+
+        if(!checkdate($request->input('month'), $request->input('day'), $request->input('year'))) {
+            return redirect()->route('homepage.index')
+                ->with('date_error', 'Informe uma data válida');
+        }
+
+        User::insert([
+            'first_name' => $request->input('first_name'),
+            'last_name' => $request->input('last_name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+            'gender' => $request->input('gender'),
+            'birthday' => date('Y-m-d', strtotime($request->input('day').'-'.$request->input('month').'-'.$request->input('year'))),
+            'slug' => $this->generateSlug($request->input('first_name'), $request->input('last_name'))
+        ]);
     }
 
     public function getDays() 
@@ -43,10 +59,22 @@ class HomepageController extends Controller
     public function getYears()
     {
     	$years = [];
-    	for($counter = intval(date('Y')); $counter > 1900; $counter--) {
+    	for($counter = intval(date('Y')); $counter > 1900; $counter--) 
+        {
     		array_push($years, $counter);
     	}
     	return $years;
+    }
+
+    public function generateSlug($firstName, $lastName)
+    {
+        $slug = str_slug($firstName.' '.$lastName);
+        $count = User::where('slug', 'like', $slug.'%')->count();
+        if($count > 0) 
+        {
+            $slug.=($count + 1);
+        }
+        return $slug;
     }
 
 }
