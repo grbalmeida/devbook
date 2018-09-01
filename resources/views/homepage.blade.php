@@ -1,3 +1,7 @@
+@auth
+	<div class="h1">Usuário logado com sucesso</div>
+@endauth
+@guest
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,12 +12,18 @@
 <body>
 	<div class="container-fluid">
 		<nav class="navbar navbar-dark bg-primary d-flex flex-row-reverse">
-			<form>
+			<form method="POST" action="{{ route('homepage.login') }}">
+				@csrf
 				<div class="form-inline">
-					<input type="text" class="form-control mr-2" placeholder="E-mail">
-					<input type="password" class="form-control mr-2" placeholder="Senha">
-				<button type="submit" class="btn btn-success">Logar</button>
-			</div>
+					<input type="text" name="email_login" class="form-control mr-2 {{ $errors->has('email_login') ? 'is-invalid' : '' }}" placeholder="E-mail" value="{{ old('email_login') }}">
+					<input type="password" name="password_login" class="form-control mr-2 {{ $errors->has('password_login') ? 'is-invalid' : '' }}" placeholder="Senha">
+					<button type="submit" class="btn btn-success">Logar</button>
+				</div>
+				@if($errors->has('email_login') || $errors->has('password_login'))
+					<div class="invalid-feedback d-block text-white" style="font-size: 16px;">
+						E-mail ou senha incorretos
+					</div>
+				@endif
 			</form>
 		</nav>
 		<div class="container-fluid d-flex flex-row-reverse">
@@ -21,7 +31,7 @@
 				<div class="card-body">
 					<div class="h4">Cadastre-se agora</div>
 				</div>
-				<form method="POST">
+				<form method="POST" action="{{ route('homepage.store') }}">
 					@csrf
 					<input type="text" name="first_name" placeholder="Nome" class="form-control mb-2 {{ $errors->has('first_name') ? 'is-invalid' : '' }}" value="{{ old('first_name') }}">
 					@if($errors->has('first_name'))
@@ -95,3 +105,4 @@
 	</div>
 </body>
 </html>
+@endguest

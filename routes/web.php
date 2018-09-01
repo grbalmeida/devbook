@@ -12,7 +12,8 @@
 */
 
 Route::get('/', 'HomepageController@index')->name('homepage.index');
-Route::post('/', 'HomepageController@store');
+Route::post('/', 'HomepageController@store')->name('homepage.store');
+Route::post('/login', 'HomepageController@login')->name('homepage.login');
 
 Route::prefix('/groups')->group(function() {
 	Route::prefix('/{group_id}')->group(function($groupId) {

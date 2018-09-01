@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\UserRegistrationRequest;
+use App\Http\Requests\UserLoginRequest;
 use App\Models\Users\User;
 
 class HomepageController extends Controller
@@ -33,6 +36,16 @@ class HomepageController extends Controller
             'birthday' => date('Y-m-d', strtotime($request->input('day').'-'.$request->input('month').'-'.$request->input('year'))),
             'slug' => $this->generateSlug($request->input('first_name'), $request->input('last_name'))
         ]);
+    }
+
+    public function login(UserLoginRequest $request)
+    {
+        $request->validated();
+        Auth::attempt([
+            'email' => $request->input('email_login'),
+            'password' => $request->input('password_login')
+        ]);
+        return redirect()->route('homepage.index');
     }
 
     public function getDays() 
