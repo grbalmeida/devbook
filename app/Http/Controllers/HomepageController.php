@@ -16,7 +16,8 @@ class HomepageController extends Controller
     	return view('homepage')
     		->with('days', $this->getDays())
     		->with('months', $this->getMonths())
-    		->with('years', $this->getYears());
+    		->with('years', $this->getYears())
+            ->with('user', Auth::user());
     }
 
     public function store(UserRegistrationRequest $request) {
@@ -36,15 +37,27 @@ class HomepageController extends Controller
             'birthday' => date('Y-m-d', strtotime($request->input('day').'-'.$request->input('month').'-'.$request->input('year'))),
             'slug' => $this->generateSlug($request->input('first_name'), $request->input('last_name'))
         ]);
+        return $this->auth($request, 'email', 'password');
     }
 
     public function login(UserLoginRequest $request)
     {
         $request->validated();
+        return $this->auth($request, 'email_login', 'password_login');
+    }
+
+    public function auth($request, $email, $password)
+    {
         Auth::attempt([
-            'email' => $request->input('email_login'),
-            'password' => $request->input('password_login')
+            'email' => $request->input($email),
+            'password' => $request->input($password)
         ]);
+        return redirect()->route('homepage.index');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
         return redirect()->route('homepage.index');
     }
 
