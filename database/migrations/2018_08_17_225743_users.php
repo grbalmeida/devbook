@@ -24,6 +24,7 @@ class Users extends Migration
             $table->string('slug', 100);
             $table->timestamps();
             $table->softDeletes();
+            $table->rememberToken();
         });
     }
 
