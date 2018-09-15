@@ -21,7 +21,8 @@ class HomepageController extends Controller
     		->with('years', $this->getYears())
             ->with('user', Auth::user())
             ->with('friends', $this->getFriends())
-            ->with('groups', $this->getGroups());
+            ->with('groups', $this->getGroups())
+            ->with('count', $this->getCountFriendshipRequest());
     }
 
     public function store(UserRegistrationRequest $request) {
@@ -77,6 +78,12 @@ class HomepageController extends Controller
             ->toArray();
         $friends = User::whereIn('id', $friendsId)->get();
         return $friends;
+    }
+
+    public function getCountFriendshipRequest()
+    {
+        $count = Auth::user()->friendshipRequests()->count();
+        return $count;
     }
 
     public function getGroups()
