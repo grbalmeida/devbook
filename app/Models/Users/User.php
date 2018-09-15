@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Groups\GroupMember;
 use Permission;
 use Setting;
-use FriendshipRequest;
+use App\Models\Users\FriendshipRequest;
 use App\Models\Users\Relationship;
 use UserPost;
 
@@ -51,7 +51,7 @@ class User extends Authenticatable
 
     public function friendshipRequests()
     {
-        return $this->hasMany(FrienshipRequest::class, 'requested_user_id');
+        return $this->hasMany(FriendshipRequest::class, 'requested_user_id');
     }
 
     public function friends()
