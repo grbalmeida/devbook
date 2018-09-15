@@ -4,7 +4,7 @@ namespace App\Models\Groups;
 
 use Illuminate\Database\Eloquent\Model;
 use GroupPost;
-use GroupMember;
+use App\Models\Groups\GroupMember;
 
 class Group extends Model
 {

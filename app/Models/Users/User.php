@@ -8,7 +8,7 @@ use App\Models\Groups\GroupMember;
 use Permission;
 use Setting;
 use FriendshipRequest;
-use Relationship;
+use App\Models\Users\Relationship;
 use UserPost;
 
 class User extends Authenticatable
@@ -66,7 +66,7 @@ class User extends Authenticatable
 
     public function groups()
     {
-        return $this->belongsToMany(GroupMember::class, 'user_id');
+        return $this->belongsToMany(GroupMember::class);
     }
 
 }
