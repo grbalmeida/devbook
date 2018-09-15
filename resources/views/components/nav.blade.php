@@ -15,7 +15,15 @@
 				<div class="col-6 mt-2">
 					<i class="fas fa-user-friends mr-3 {{ $count > 0 ? 'text-danger' : '' }}" style="font-size: 25px;"></i>
 					<i class="fas fa-bell mr-5" style="font-size: 25px;"></i>
-					<i class="fas fa-chevron-down"></i>
+					<div class="btn-group">
+					  	<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					  	</button>
+					  	<div class="dropdown-menu">
+						    <a class="dropdown-item" href="{{ route('settings.index') }}">Configurações</a>
+						    <div class="dropdown-divider"></div>
+						    <a class="dropdown-item" href="{{ route('homepage.logout') }}">Sair</a>
+					  	</div>
+					</div>
 				</div>
 			</div>
 		</div>
