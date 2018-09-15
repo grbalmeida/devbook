@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\UserRegistrationRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Models\Users\User;
+use App\Models\Groups\GroupMember;
+use App\Models\Groups\Group;
 
 class HomepageController extends Controller
 {
@@ -17,7 +19,9 @@ class HomepageController extends Controller
     		->with('days', $this->getDays())
     		->with('months', $this->getMonths())
     		->with('years', $this->getYears())
-            ->with('user', Auth::user());
+            ->with('user', Auth::user())
+            ->with('friends', $this->getFriends())
+            ->with('groups', $this->getGroups());
     }
 
     public function store(UserRegistrationRequest $request) {
@@ -48,17 +52,42 @@ class HomepageController extends Controller
 
     public function auth($request, $email, $password)
     {
-        Auth::attempt([
+        $auth = Auth::attempt([
             'email' => $request->input($email),
             'password' => $request->input($password)
         ]);
-        return redirect()->route('homepage.index');
+        return redirect()
+            ->route('homepage.index')
+            ->with('logged', $auth);
     }
 
     public function logout()
     {
         Auth::logout();
         return redirect()->route('homepage.index');
+    }
+
+    public function getFriends()
+    {
+        $friendsId = Auth::user()
+            ->friends()
+            ->limit(5)
+            ->select('friend_id')
+            ->get()
+            ->toArray();
+        $friends = User::whereIn('id', $friendsId)->get();
+        return $friends;
+    }
+
+    public function getGroups()
+    {
+        $groupsId = GroupMember::where('user_id', Auth::user()->id)
+            ->select('group_id')
+            ->limit(5)
+            ->get()
+            ->toArray();
+        $groups = Group::whereIn('id', $groupsId)->get();
+        return $groups;
     }
 
     public function getDays() 
