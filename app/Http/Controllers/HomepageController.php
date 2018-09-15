@@ -15,14 +15,19 @@ class HomepageController extends Controller
 {
     public function index()
     {
-    	return view('homepage')
-    		->with('days', $this->getDays())
-    		->with('months', $this->getMonths())
-    		->with('years', $this->getYears())
-            ->with('user', Auth::user())
-            ->with('friends', $this->getFriends())
-            ->with('groups', $this->getGroups())
-            ->with('count', $this->getCountFriendshipRequest());
+        if(Auth::user() == null) {
+        	return view('homepage')
+        		->with('days', $this->getDays())
+        		->with('months', $this->getMonths())
+        		->with('years', $this->getYears())
+                ->with('user', Auth::user());
+        } else {
+            return view('homepage')
+                ->with('user', Auth::user())
+                ->with('friends', $this->getFriends())
+                ->with('groups', $this->getGroups())
+                ->with('count', $this->getCountFriendshipRequest());
+        }
     }
 
     public function store(UserRegistrationRequest $request) {
