@@ -3,8 +3,14 @@
 @auth
 	@component('components.nav', ['user' => $user])
 	@endcomponent
+	<div class="container-fluid">
+	<div class="row">
 	@component('components.sidebar-groups-friends', ['user' => $user, 'friends' => $friends, 'groups' => $groups])
 	@endcomponent
+	@component('components.create-post')
+	@endcomponent
+	</div>
+	</div>
 @endauth
 @guest
 	<div class="container-fluid">
