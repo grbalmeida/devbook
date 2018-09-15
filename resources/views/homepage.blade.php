@@ -1,15 +1,12 @@
+@component('components.header')
+@endcomponent
 @auth
-	<div class="h1">Usuário logado com sucesso</div>
+	@component('components.nav', ['user' => $user])
+	@endcomponent
+	@component('components.sidebar-groups-friends', ['user' => $user, 'friends' => $friends, 'groups' => $groups])
+	@endcomponent
 @endauth
 @guest
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-	<meta charset="utf-8">
-	<title>Devbook</title>
-	<link rel="stylesheet" href="{{ url('css/app.css') }}">
-</head>
-<body>
 	<div class="container-fluid">
 		<nav class="navbar navbar-dark bg-primary d-flex flex-row-reverse">
 			<form method="POST" action="{{ route('homepage.login') }}">
@@ -20,9 +17,12 @@
 					<button type="submit" class="btn btn-success">Logar</button>
 				</div>
 				@if($errors->has('email_login') || $errors->has('password_login'))
-					<div class="invalid-feedback d-block text-white" style="font-size: 16px;">
-						E-mail ou senha incorretos
-					</div>
+					@component('components.wrong-password-email')
+					@endcomponent
+				@endif
+				@if(session('logged') !== null && session('logged') === false)
+					@component('components.wrong-password-email')
+					@endcomponent
 				@endif
 			</form>
 		</nav>
@@ -103,6 +103,6 @@
 			</div>
 		</div>
 	</div>
-</body>
-</html>
 @endguest
+@component('components.footer')
+@endcomponent
