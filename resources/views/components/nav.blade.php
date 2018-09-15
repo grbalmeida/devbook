@@ -13,7 +13,7 @@
 					</a>
 				</div>
 				<div class="col-6 mt-2">
-					<i class="fas fa-user-friends mr-3" style="font-size: 25px;"></i>
+					<i class="fas fa-user-friends mr-3 {{ $count > 0 ? 'text-danger' : '' }}" style="font-size: 25px;"></i>
 					<i class="fas fa-bell mr-5" style="font-size: 25px;"></i>
 					<i class="fas fa-chevron-down"></i>
 				</div>
