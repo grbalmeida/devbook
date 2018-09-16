@@ -17,7 +17,7 @@
 					  	<button type="button" class="btn btn-primary" data-toggle="dropdown" aria-expanded="false">
 					  		<i class="fas fa-user-friends mr-2 {{ $count > 0 ? 'text-danger' : 'text-dark' }}" style="font-size: 25px;"></i>
 					  	</button>
-					  	<div class="dropdown-menu">
+					  	<div class="dropdown-menu" data-friends-request>
 						    @if($count == 0)
 						    <a class="dropdown-item">
 						    	Não há sugestões de amizade
@@ -31,8 +31,8 @@
 						    	</div>
 						    	<div class="w-100 mb-2"></div>
 						    	<div>
-						    		<button class="btn btn-success mr-2">Aceitar</button>
-						    		<button class="btn btn-secondary">Excluir</button>
+						    		<button class="btn btn-success mr-2" data-accept-friend-request="{{ $friendshipRequested->id }}">Aceitar</button>
+						    		<button class="btn btn-secondary" data-remove-friend-request="{{ $friendshipRequested->id }}">Excluir</button>
 						    	</div>
 						    </a>
 						    @endforeach
