@@ -9,6 +9,8 @@
 	@endcomponent
 	@component('components.create-post')
 	@endcomponent
+	@component('components.friendship-suggestions', ['friendshipSuggestions' => $friendshipSuggestions])
+	@endcomponent
 	</div>
 	</div>
 @endauth
