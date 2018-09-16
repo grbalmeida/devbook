@@ -1,4 +1,4 @@
-<div class="card col-3 mt-2 ml-4">
+<div class="card col-3 mt-2 ml-4 h-100">
 	<div class="card-body" data-friendship-suggestions>
 		<div class="h5">Sugestões de amizade</div>
 		<div class="w-100"></div>
