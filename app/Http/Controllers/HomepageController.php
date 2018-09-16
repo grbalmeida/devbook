@@ -15,7 +15,6 @@ class HomepageController extends Controller
 {
     public function index()
     {
-        $this->getFriendhipRequests();
         if(Auth::user() == null) {
         	return view('homepage')
         		->with('days', $this->getDays())
@@ -28,7 +27,8 @@ class HomepageController extends Controller
                 ->with('friends', $this->getFriends())
                 ->with('groups', $this->getGroups())
                 ->with('count', $this->getCountFriendshipRequest())
-                ->with('friendshipSuggestions', $this->getFriendhipSuggestions());
+                ->with('friendshipSuggestions', $this->getFriendhipSuggestions())
+                ->with('friendshipRequesteds', $this->getFriendhipRequesteds());
         }
     }
 
@@ -103,15 +103,37 @@ class HomepageController extends Controller
         $friendshipSugestions = User::whereNotIn('id', $this->getFriendsId())
             ->where('id', '!=', Auth::user()->id)
             ->whereNotIn('id', $this->getFriendhipRequests())
+            ->whereNotIn('id', $this->getIdWhoAskedForRequest())
             ->limit(3)
             ->get();
         return $friendshipSugestions;
     }
 
+    public function getFriendhipRequesteds()
+    {
+        $friendshipRequesteds = $this->getIdWhoAskedForRequest();
+        $friendshipRequesteds = User::whereIn('id', $friendshipRequesteds)->get();
+        return $friendshipRequesteds;
+    }
+
     public function getFriendhipRequests()
     {
-        $friendshipRequests = Auth::user()->friendshipRequests()->select('requested_user_id')->get()->toArray();
+        $friendshipRequests = Auth::user()
+            ->friendshipRequests()
+            ->select('requested_user_id')
+            ->get()
+            ->toArray();
         return $friendshipRequests;
+    }
+
+    public function getIdWhoAskedForRequest()
+    {
+        $idWhoAskedForRequest = Auth::user()
+            ->friendshipRequesteds()
+            ->select('request_user_id')
+            ->get()
+            ->toArray();
+        return $idWhoAskedForRequest;
     }
 
     public function getGroups()
