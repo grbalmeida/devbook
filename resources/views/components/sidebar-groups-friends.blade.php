@@ -1,4 +1,4 @@
-<div class="card col-3 mt-2 ml-3">
+<div class="card col-3 mt-2 ml-3 mr-4">
 	<div class="card-body">
 		<div class="w-100">
 			<a href="{{ route('profile.index', $user->slug) }}" class="text-dark">
