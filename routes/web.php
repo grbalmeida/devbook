@@ -53,3 +53,7 @@ Route::prefix('/settings')->group(function() {
 
 Route::post('/add-friend/{requestedUserId}', 'Ajax\AddFriendController@store')
 	->name('add-friend');
+Route::post('/remove-friend-request/{requestUserId}', 'Ajax\AddFriendController@destroy')
+	->name('remove-friend-request');
+Route::post('/accept-friend-request/{requestUserId}', 'Ajax\AddFriendController@addFriend')
+	->name('accept-friend-request');
