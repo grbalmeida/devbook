@@ -13,8 +13,33 @@
 					</a>
 				</div>
 				<div class="col-6 mt-2">
-					<i class="fas fa-user-friends mr-3 {{ $count > 0 ? 'text-danger' : '' }}" style="font-size: 25px;"></i>
-					<i class="fas fa-bell mr-5" style="font-size: 25px;"></i>
+					<div class="btn-group">
+					  	<button type="button" class="btn btn-primary" data-toggle="dropdown" aria-expanded="false">
+					  		<i class="fas fa-user-friends mr-2 {{ $count > 0 ? 'text-danger' : 'text-dark' }}" style="font-size: 25px;"></i>
+					  	</button>
+					  	<div class="dropdown-menu">
+						    @if($count == 0)
+						    <a class="dropdown-item">
+						    	Não há sugestões de amizade
+						    </a>
+						    @else
+						    @foreach($friendshipRequesteds as $friendshipRequested)
+						    <a class="dropdown-item" href="{{ route('profile.index', $friendshipRequested->slug) }}">
+						    	<div>
+						    		<img src="{{ url('/images/default.jpg') }}" width="50" class="rounded-circle">
+						    		{{ $friendshipRequested->first_name.' '.$friendshipRequested->last_name }}
+						    	</div>
+						    	<div class="w-100 mb-2"></div>
+						    	<div>
+						    		<button class="btn btn-success mr-2">Aceitar</button>
+						    		<button class="btn btn-secondary">Excluir</button>
+						    	</div>
+						    </a>
+						    @endforeach
+						    @endif
+					  	</div>
+					</div>
+					<i class="fas fa-bell mr-5 text-dark" style="font-size: 25px;"></i>
 					<div class="btn-group">
 					  	<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					  	</button>
