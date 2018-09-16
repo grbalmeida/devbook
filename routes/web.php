@@ -50,3 +50,6 @@ Route::prefix('/settings')->group(function() {
 	Route::get('/privacy', 'SettingController@privacy')
 		->name('settings.privacy');
 });
+
+Route::post('/add-friend/{requestedUserId}', 'Ajax\AddFriendController@store')
+	->name('add-friend');
