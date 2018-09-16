@@ -1,7 +1,7 @@
 @component('components.header')
 @endcomponent
 @auth
-	@component('components.nav', ['user' => $user, 'count' => $count])
+	@component('components.nav', ['user' => $user, 'count' => $count, 'friendshipRequesteds' => $friendshipRequesteds])
 	@endcomponent
 	<div class="container-fluid">
 	<div class="row">
