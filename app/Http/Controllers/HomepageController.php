@@ -15,6 +15,7 @@ class HomepageController extends Controller
 {
     public function index()
     {
+        $this->getFriendhipRequests();
         if(Auth::user() == null) {
         	return view('homepage')
         		->with('days', $this->getDays())
@@ -26,7 +27,8 @@ class HomepageController extends Controller
                 ->with('user', Auth::user())
                 ->with('friends', $this->getFriends())
                 ->with('groups', $this->getGroups())
-                ->with('count', $this->getCountFriendshipRequest());
+                ->with('count', $this->getCountFriendshipRequest())
+                ->with('friendshipSuggestions', $this->getFriendhipSuggestions());
         }
     }
 
@@ -73,7 +75,7 @@ class HomepageController extends Controller
         return redirect()->route('homepage.index');
     }
 
-    public function getFriends()
+    public function getFriendsId()
     {
         $friendsId = Auth::user()
             ->friends()
@@ -81,14 +83,35 @@ class HomepageController extends Controller
             ->select('friend_id')
             ->get()
             ->toArray();
-        $friends = User::whereIn('id', $friendsId)->get();
+        return $friendsId;
+    }
+
+    public function getFriends() 
+    {
+        $friends = User::whereIn('id', $this->getFriendsId())->get();
         return $friends;
     }
 
     public function getCountFriendshipRequest()
     {
-        $count = Auth::user()->friendshipRequests()->count();
+        $count = Auth::user()->friendshipRequesteds()->count();
         return $count;
+    }
+
+    public function getFriendhipSuggestions()
+    {
+        $friendshipSugestions = User::whereNotIn('id', $this->getFriendsId())
+            ->where('id', '!=', Auth::user()->id)
+            ->whereNotIn('id', $this->getFriendhipRequests())
+            ->limit(3)
+            ->get();
+        return $friendshipSugestions;
+    }
+
+    public function getFriendhipRequests()
+    {
+        $friendshipRequests = Auth::user()->friendshipRequests()->select('requested_user_id')->get()->toArray();
+        return $friendshipRequests;
     }
 
     public function getGroups()
@@ -98,7 +121,7 @@ class HomepageController extends Controller
             ->limit(5)
             ->get()
             ->toArray();
-        $groups = Group::whereIn('id', $groupsId)->get();
+        $groups = Group::whereIn('id', $groupsId)->limit(5)->get();
         return $groups;
     }
 
