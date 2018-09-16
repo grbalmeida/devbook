@@ -11,35 +11,59 @@
 			removeFrienshipSuggestion(`[${cancel}="${id}"]`)
 		}
 	})
+	document.addEventListener('click', removeFriendRequest)
+	document.addEventListener('click', acceptFriendRequest)
 
 	function getRequestedUserId(event) {
 		if(event.target.hasAttribute('data-user-suggestion-id')) {
 			const requestedUserId = event.target.getAttribute('data-user-suggestion-id')
 			const url = `${location.href}add-friend/${requestedUserId}`
-			makeAjaxRequest(url, 'POST', requestedUserId)
+			makeAjaxRequest(url, 'POST', requestedUserId, removeFrienshipSuggestion, `[data-user-suggestion-id="${requestedUserId}"]`)
 		}
 	}
 
-	function makeAjaxRequest(url, method, requestedUserId) {
+	function makeAjaxRequest(url, method, userId, callback, argument) {
 		const request = new XMLHttpRequest()
 		request.open(method, url)
 		request.setRequestHeader('X-CSRF-TOKEN', token)
 		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		request.send({ requestedUserId })
+		request.send({ userId })
 
 		request.addEventListener('readystatechange', function() {
 			if(request.readyState === 4 && request.status === 200) {
 				if(request.responseText) {
-					removeFrienshipSuggestion(`[data-user-suggestion-id="${requestedUserId}"]`)
+					callback(argument)
 				}
 			}
 		})
 	}
 
 	function removeFrienshipSuggestion(target) {
-		console.log(target)
 		const friendshipSuggestion = document.querySelector(target)
 		friendshipSuggestions.removeChild(friendshipSuggestion.parentNode)
+	}
+
+	function removeFriendRequest(event) {
+		if(event.target.hasAttribute('data-remove-friend-request')) {
+			event.preventDefault()
+			const requestUserId = event.target.getAttribute('data-remove-friend-request')
+			const url = `${location.href}remove-friend-request/${requestUserId}`
+			makeAjaxRequest(url, 'POST', requestUserId, removeChildFromFriendsRequest, event.target.parentNode.parentNode)
+		}
+	}
+
+	function acceptFriendRequest(event)
+	{
+		if(event.target.hasAttribute('data-accept-friend-request')) {
+			event.preventDefault()
+			const requestUserId = event.target.getAttribute('data-accept-friend-request')
+			const url = `${location.href}accept-friend-request/${requestUserId}`
+			makeAjaxRequest(url, 'POST', requestUserId, removeChildFromFriendsRequest, event.target.parentNode.parentNode)
+		}
+	}
+
+	function removeChildFromFriendsRequest(target) {
+		const friendsRequest = document.querySelector('[data-friends-request]').removeChild(target)
 	}
 
 })()
