@@ -10,6 +10,7 @@ use App\Http\Requests\UserLoginRequest;
 use App\Models\Users\User;
 use App\Models\Groups\GroupMember;
 use App\Models\Groups\Group;
+use App\Models\Users\UserPost;
 
 class HomepageController extends Controller
 {
@@ -28,7 +29,9 @@ class HomepageController extends Controller
                 ->with('groups', $this->getGroups())
                 ->with('count', $this->getCountFriendshipRequest())
                 ->with('friendshipSuggestions', $this->getFriendhipSuggestions())
-                ->with('friendshipRequesteds', $this->getFriendhipRequesteds());
+                ->with('friendshipRequesteds', $this->getFriendhipRequesteds())
+                ->with('friendsPosts', $this->getFriendsPosts())
+                ->with('elapsedTime', $this->getElapsedTime());
         }
     }
 
@@ -80,6 +83,16 @@ class HomepageController extends Controller
         $friendsId = Auth::user()
             ->friends()
             ->limit(5)
+            ->select('friend_id')
+            ->get()
+            ->toArray();
+        return $friendsId;
+    }
+
+    public function getAllFriendsId()
+    {
+        $friendsId = Auth::user()
+            ->friends()
             ->select('friend_id')
             ->get()
             ->toArray();
@@ -147,6 +160,21 @@ class HomepageController extends Controller
         return $groups;
     }
 
+    public function getFriendsPosts()
+    {
+        $friendsPosts = UserPost::whereIn('user_has_posts.user_id', $this->getFriendsId())
+            ->select('user_has_posts.id', 'users.first_name', 'users.last_name', 'users.slug', DB::raw('user_has_posts.user_id as user_has_posts_user_id'), 'user_has_posts.post', 'user_has_posts.created_at', DB::raw('COUNT(DISTINCT user_posts_has_likes.id) as count_likes'), DB::raw('COUNT(DISTINCT user_posts_has_comments.id) as count_comments'))
+            ->join('users', 'users.id', '=', 'user_has_posts.user_id')
+            ->leftJoin('user_posts_has_likes', 'user_posts_has_likes.post_id', 'user_has_posts.id')
+            ->leftJoin('user_posts_has_comments', 'user_posts_has_comments.post_id', 'user_has_posts.id')
+            ->orderBy('user_has_posts.created_at', 'desc')
+            ->limit(5)
+            ->groupBy('user_has_posts.id')
+            ->get();
+
+        return $friendsPosts;
+    }
+
     public function getDays() 
     {
     	$days = [];
@@ -155,6 +183,29 @@ class HomepageController extends Controller
     		array_push($days, $counter);
     	}
     	return $days;
+    }
+
+    public static function getElapsedTime() 
+    {
+        return function($time) {
+            $now = strtotime(date('m/d/Y H:i:s'));
+            $time = strtotime($time);
+            $diff = $now - $time;
+
+            $seconds = $diff;
+            $minutes = round($diff / 60);
+            $hours = round($diff / 3600);
+            $days = round($diff / 86400);
+            $months = round($diff / 2419200);
+            $years = round($diff / 29030400);
+
+            if ($seconds <= 60) return '1 min atrás';
+            else if ($minutes <= 60) return $minutes==1 ?'1 min atrás':$minutes.' min atrás';
+            else if ($hours <= 24) return $hours==1 ?'1 hrs atrás':$hours.' hrs atrás';
+            else if ($days <= 7) return $days==1 ?'1 dia atras':$days.' dias atrás';
+            else if ($months <= 12) return $months == 1 ?'1 mês atrás':$months.' meses atrás';
+            else return $years == 1 ? 'um ano atrás':$years.' anos atrás';
+        };
     }
 
     public function getMonths()
