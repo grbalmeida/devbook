@@ -47,10 +47,10 @@
 		<hr>
 		<div class="row mb-2">
 			<div class="col-1">
-				<i class="fas fa-thumbs-up" style="font-size: 25px;"></i>
+				<i class="fas fa-thumbs-up @if($userHasLikedPost(Auth::user()->id, $friendPost->id) == 1) text-primary @endif" style="font-size: 25px; cursor: pointer;"></i>
 			</div>
 			<div class="col-1">
-				<i class="fas fa-comment" style="font-size: 25px;"></i>
+				<i class="fas fa-comment" style="font-size: 25px; cursor: pointer;"></i>
 			</div>
 		</div>
 	</div>

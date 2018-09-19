@@ -11,6 +11,7 @@ use App\Models\Users\User;
 use App\Models\Groups\GroupMember;
 use App\Models\Groups\Group;
 use App\Models\Users\UserPost;
+use App\Models\Users\UserPostLike;
 
 class HomepageController extends Controller
 {
@@ -31,7 +32,8 @@ class HomepageController extends Controller
                 ->with('friendshipSuggestions', $this->getFriendhipSuggestions())
                 ->with('friendshipRequesteds', $this->getFriendhipRequesteds())
                 ->with('friendsPosts', $this->getFriendsPosts())
-                ->with('elapsedTime', $this->getElapsedTime());
+                ->with('elapsedTime', $this->getElapsedTime())
+                ->with('userHasLikedPost', $this->userHasLikedPost());
         }
     }
 
@@ -173,6 +175,17 @@ class HomepageController extends Controller
             ->get();
 
         return $friendsPosts;
+    }
+
+    public function userHasLikedPost()
+    {
+        return function($userId, $postId) {
+            $userLikedPost = UserPostLike::where([
+                'user_id' => $userId,
+                'post_id' => $postId
+            ])->count();
+            return $userLikedPost;
+        };
     }
 
     public function getDays() 
