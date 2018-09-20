@@ -57,3 +57,5 @@ Route::post('/remove-friend-request/{requestUserId}', 'Ajax\AddFriendController@
 	->name('remove-friend-request');
 Route::post('/accept-friend-request/{requestUserId}', 'Ajax\AddFriendController@addFriend')
 	->name('accept-friend-request');
+
+Route::post('add-post/{post}', 'UserPostController@store');
