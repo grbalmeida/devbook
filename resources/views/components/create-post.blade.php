@@ -37,12 +37,16 @@
 			</div>
 			<div class="row">
 				<div class="col-12">
-					@if($friendPost->count_likes > 0)
-					<span style="font-size: 0.8em;">{{ $friendPost->count_likes }} {{ $friendPost->count_likes == 1 ? 'curtida' : 'curtidas' }}</span>
-					@endif
-					@if($friendPost->count_comments > 0)
-					<span style="font-size: 0.8em;">{{ $friendPost->count_comments }} {{ $friendPost->count_comments == 1 ? 'comentário' : 'comentários' }}</span>
-					@endif
+					<span style="font-size: 0.8em;">
+						@if($friendPost->count_likes > 0)
+							{{ $friendPost->count_likes }} {{ $friendPost->count_likes == 1 ? 'curtida' : 'curtidas' }}
+						@endif
+					</span>
+					<span style="font-size: 0.8em;">
+						@if($friendPost->count_comments > 0)
+							{{ $friendPost->count_comments }} {{ $friendPost->count_comments == 1 ? 'comentário' : 'comentários' }}
+						@endif
+					</span>
 	 			</div>
 			</div>
 			<hr>
