@@ -21,7 +21,6 @@
 		const card = button.parentNode.parentNode.parentNode
 		const countLikesAndComments = card.children[2]
 		const countLikes = countLikesAndComments.children[0].children[0]
-		console.log(countLikes)
 		if(response.count == 1) {
 			button.classList.remove('text-primary')
 		} else {

@@ -1,5 +1,5 @@
 <div class="col-5 mt-2 ml-4 mr-3" style="height: 100px;">
-	<div class="card mb-3">
+	<div class="card mb-2">
 		<div class="card-body h-50">
 			<form>
 				<div class="row">
@@ -8,12 +8,13 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-2 mr-1">
-						<button class="mt-4 btn btn-success" data-post-btn>Publicar</button>
+					<div class="col-2 mr-1 mt-2">
+						<button class="mt-2 btn btn-success" data-post-btn>Publicar</button>
 					</div>
 					<div class="col-1">
-						<i class="fas fa-image mt-4" style="font-size: 25px;"></i>
+						<i class="fas fa-image pt-4" style="font-size: 25px;"></i>
 					</div>
+					<div class="ml-4 col-8 d-flex flex-row-reverse align-items-end" data-count-words></div>
 				</div>
 			</form>
 		</div>

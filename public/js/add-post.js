@@ -7,11 +7,53 @@
 	const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 	const textarea = document.querySelector('textarea')
 	const posts = document.querySelector('[data-posts]')
+	const countWords = document.querySelector('[data-count-words]')
 
 	btnPost.addEventListener('click', function(event) {
 		event.preventDefault()
 		validateForm(form)
 	})
+
+	textarea.addEventListener('focus', getCountWords)
+	textarea.addEventListener('blur', hiddenCountWords)
+	textarea.addEventListener('input', getCountWords)
+	textarea.addEventListener('keydown', preventActionOnTextarea)
+
+	function preventActionOnTextarea(event) {
+		if(getLengthIsEqualThan255() && event.keyCode != 8) {
+			event.preventDefault()
+		}
+	} 
+
+	function getLengthIsEqualThan255() {
+		return textarea.value.length == 255
+	}
+
+	function getCountWords(event) {
+		const length = textarea.value.length
+		if(length > 0) {
+			showCountWords(length)
+		} else {
+			showCountWords(0)
+		}
+		changeColorIfCountEqualThan255()
+	}
+
+	function changeColorIfCountEqualThan255() {
+		if(getLengthIsEqualThan255()) {
+			countWords.classList.add('text-danger')
+		} else {
+			countWords.classList.remove('text-danger')
+		}
+	}
+
+	function showCountWords(count = '0') {
+		countWords.textContent = `${count} de 255`
+	}
+
+	function hiddenCountWords() {
+		countWords.textContent = ''
+	}
 
 	function validateForm(form) {
 		const formData = new FormData(form)
@@ -35,6 +77,7 @@
 				</span>
 			</div>
 			${getPost(post)}
+			${getCountLikesAndComments()}
 			<hr>
 			${getIcons()}
 		</div>`	
@@ -79,6 +122,17 @@
 
 	function getFormattedName(post) {
 		return `<span class="col-7 pt-3 d-block">${post.first_name} ${post.last_name}</span>`
+	}
+
+	function getCountLikesAndComments() {
+		return `<div class="row">
+				<div class="col-12">
+					<span style="font-size: 0.8em;">
+					</span>
+					<span style="font-size: 0.8em;">
+					</span>
+	 			</div>
+		</div>`
 	}
 
 	function getIcons() {
