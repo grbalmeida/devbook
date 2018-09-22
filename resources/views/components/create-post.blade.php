@@ -64,9 +64,9 @@
 					<img class="rounded-circle mt-1" src="{{ url('images/default.jpg') }}" width="35">
 				</div>
 				<div class="col-11">
-					<input type="" name="" class="form-control h-50" data-input-comment>
+					<input type="text" class="form-control h-50" data-input-comment>
 					<button class="btn-success border-0 mt-2" data-btn-comment>Comentar</button>
-				</div>
+				</div> 
 			</div>
 		</div>
 		@endforeach

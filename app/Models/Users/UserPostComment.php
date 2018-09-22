@@ -3,7 +3,6 @@
 namespace App\Models\Users;
 
 use Illuminate\Database\Eloquent\Model;
-use UserPostComment;
 use UserCommentLike;
 
 class UserPostComment extends Model
@@ -13,7 +12,8 @@ class UserPostComment extends Model
     protected $fillable = [
     	'post_id',
     	'user_id',
-    	'parent_id'
+    	'parent_id',
+        'comment'
     ];
 
     public function comments()

@@ -60,3 +60,4 @@ Route::post('/accept-friend-request/{requestUserId}', 'Ajax\AddFriendController@
 
 Route::post('add-post/{post}', 'UserPostController@store');
 Route::post('add-remove-like/{postId}', 'UserPostLikeController@addRemoveLike');
+Route::post('add-comment/{postId}/{comment}', 'UserPostCommentController@store');

@@ -80,6 +80,7 @@
 			${getCountLikesAndComments()}
 			<hr>
 			${getIcons()}
+			${getCommentArea()}
 		</div>`	
 		posts.insertAdjacentHTML('afterbegin', card)
 		cleanFields()
@@ -142,6 +143,18 @@
 				</div>
 				<div class="col-1">
 					<i class="fas fa-comment" style="font-size: 25px; cursor: pointer;"></i>
+				</div>
+		</div>`
+	}
+
+	function getCommentArea() {
+		return `<div class="row bg-light pl-4 pb-2 pt-2 d-none" data-comment-area>
+				<div>
+					<img class="rounded-circle mt-1" src="/images/default.jpg" width="35">
+				</div>
+				<div class="col-11">
+					<input type="" name="" class="form-control h-50" data-input-comment>
+					<button class="btn-success border-0 mt-2" data-btn-comment>Comentar</button>
 				</div>
 		</div>`
 	}
