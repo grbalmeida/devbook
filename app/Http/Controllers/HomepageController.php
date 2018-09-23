@@ -26,6 +26,7 @@ class HomepageController extends Controller
         		->with('years', $this->getYears())
                 ->with('user', Auth::user());
         } else {
+            session(['friendshipRequesteds' => $this->getFriendhipRequesteds()]);
             return view('homepage')
                 ->with('user', $this->getUser())
                 ->with('friends', $this->getFriends())

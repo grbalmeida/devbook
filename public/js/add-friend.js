@@ -11,7 +11,7 @@
 		const cancel = 'data-cancel-friendship-suggestion'
 		const id = event.target.getAttribute(cancel)
 		if(id) {
-			removeFrienshipSuggestion(`[${cancel}="${id}"]`)
+			removeFriendshipSuggestion(`[${cancel}="${id}"]`)
 		}
 	})
 	document.addEventListener('click', removeFriendRequest)
@@ -21,7 +21,7 @@
 		if(event.target.hasAttribute('data-user-suggestion-id')) {
 			const requestedUserId = event.target.getAttribute('data-user-suggestion-id')
 			const url = `${location.href}add-friend/${requestedUserId}`
-			makeAjaxRequest(url, 'POST', requestedUserId, removeFrienshipSuggestion, `[data-user-suggestion-id="${requestedUserId}"]`)
+			makeAjaxRequest(url, 'POST', requestedUserId, removeFriendshipSuggestion, `[data-user-suggestion-id="${requestedUserId}"]`)
 		}
 	}
 
@@ -35,13 +35,13 @@
 		request.addEventListener('readystatechange', function() {
 			if(request.readyState === 4 && request.status === 200) {
 				if(request.responseText) {
-					callback(argument)
+					callback(JSON.parse(request.responseText), argument)
 				}
 			}
 		})
 	}
 
-	function removeFrienshipSuggestion(target) {
+	function removeFriendshipSuggestion(response, target) {
 		const friendshipSuggestion = document.querySelector(target)
 		friendshipSuggestions.removeChild(friendshipSuggestion.parentNode)
 	}
@@ -65,8 +65,11 @@
 		}
 	}
 
-	function removeChildFromFriendsRequest(target) {
+	function removeChildFromFriendsRequest(response, target) {
 		const friendsRequest = friendshipRequests.removeChild(target)
+		if(response != null) {
+			friendshipRequests.insertAdjacentHTML('beforeend', getAnotherFrienshipRequesteds(response))
+		}
 		if(friendshipRequests.children.length == 0) {
 			iconUserFriends.classList.remove('text-danger')
 			iconUserFriends.classList.add('text-dark')
@@ -85,6 +88,20 @@
 		return `<a class="dropdown-item">
 						    	Não há solicitações de amizade
 						    </a>`	
+	}
+
+	function getAnotherFrienshipRequesteds(response) {
+		return `<a class="dropdown-item" href="/profile/${response.slug}">
+	    	<div>
+	    		<img src="/images/cover_photo_user/${response.cover_photo}" width="50" class="rounded-circle">
+	    		${response.first_name} ${response.last_name}
+	    	</div>
+	    	<div class="w-100 mb-2"></div>
+	    	<div>
+	    		<button class="btn btn-success mr-2" data-accept-friend-request="${response.id}" data-keepOpenOnClick>Aceitar</button>
+	    		<button class="btn btn-secondary" data-remove-friend-request="${response.id}" data-keepOpenOnClick>Excluir</button>
+	    	</div>
+	    </a>`
 	}
 
 })()

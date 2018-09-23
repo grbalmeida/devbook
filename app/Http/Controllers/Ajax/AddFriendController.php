@@ -28,10 +28,7 @@ class AddFriendController extends Controller
 	{
 		$relationship = FriendshipRequest::where('request_user_id', $requestUserId)
 			->where('requested_user_id', Auth::user()->id)->delete();
-		if($relationship) {
-			return response('true', 200);
-		}
-		return response('', 200);
+		return response($this->getFriendshipRequestedsRemaining($requestUserId), 200);
 	}
 
 	public function addFriend($requestUserId)
@@ -46,10 +43,35 @@ class AddFriendController extends Controller
 			'user_id' => Auth::user()->id,
 			'friend_id' => $requestUserId
 		]);
-		if($relationship && $requestUserAddFriend && $requestedUserAddFriend) {
-			return response('true', 200);
+
+		return response($this->getFriendshipRequestedsRemaining($requestUserId), 200);
+	}
+
+	public function getFriendshipRequestedsRemaining($requestUserId) {
+		$friendshipRequesteds = session('friendshipRequesteds');
+		foreach($friendshipRequesteds as $id => $friendshipRequested) {
+			if($friendshipRequested['id'] == $requestUserId) {
+				unset($friendshipRequesteds[$id]);
+			}
 		}
-		return response('', 200);
+		return $this->getAnotherFriendshipRequesteds($friendshipRequesteds);
+	}
+
+	public function getAnotherFriendshipRequesteds($friendshipRequesteds) {
+		$friendshipRequested = [];
+		foreach($friendshipRequesteds as $id => $friendship) {
+			array_push($friendshipRequested, $friendship['id']);
+		}
+		$anotherFriendshipRequesteds = FriendshipRequest::whereNotIn('request_user_id', $friendshipRequested)
+			->where('requested_user_id', Auth::user()->id)
+			->select('users.id', 'users.first_name', 'users.last_name',
+					'users.slug', 'settings.cover_photo')
+			->join('users', 'users.id', '=', 'friendship_request.request_user_id')
+			->join('settings', 'users.id', '=', 'settings.user_id')
+			->limit(1)
+			->first();
+		session()->push('friendshipRequesteds', $anotherFriendshipRequesteds);
+		return json_encode($anotherFriendshipRequesteds);
 	}
 
 }
