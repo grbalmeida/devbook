@@ -2,6 +2,9 @@
 
 	const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 	const friendshipSuggestions = document.querySelector('[data-friendship-suggestions]')
+	const friendshipRequests = document.querySelector('[data-friends-request]')
+	const iconUserFriends = document.querySelector('.fa-user-friends')
+	const dropdownMenu = document.querySelector('.dropdown-menu')
 
 	document.addEventListener('click', getRequestedUserId)
 	document.addEventListener('click', function(event) {
@@ -63,7 +66,25 @@
 	}
 
 	function removeChildFromFriendsRequest(target) {
-		const friendsRequest = document.querySelector('[data-friends-request]').removeChild(target)
+		const friendsRequest = friendshipRequests.removeChild(target)
+		if(friendshipRequests.children.length == 0) {
+			iconUserFriends.classList.remove('text-danger')
+			iconUserFriends.classList.add('text-dark')
+			dropdownMenu.classList.remove('show')
+			dropdownMenu.innerHTML = getMenuWhenCountFriendsRequestsEqualZero()
+		}
+	}
+
+	$(document).delegate(".dropdown-menu [data-keepOpenOnClick]", "click", stopPropagation)
+
+	function stopPropagation(event) {
+		event.stopPropagation()
+	}
+
+	function getMenuWhenCountFriendsRequestsEqualZero() {
+		return `<a class="dropdown-item">
+						    	Não há solicitações de amizade
+						    </a>`	
 	}
 
 })()

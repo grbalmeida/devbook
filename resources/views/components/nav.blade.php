@@ -20,7 +20,7 @@
 					  	<div class="dropdown-menu" data-friends-request>
 						    @if($count == 0)
 						    <a class="dropdown-item">
-						    	Não há sugestões de amizade
+						    	Não há solicitações de amizade
 						    </a>
 						    @else
 						    @foreach($friendshipRequesteds as $friendshipRequested)
@@ -31,8 +31,8 @@
 						    	</div>
 						    	<div class="w-100 mb-2"></div>
 						    	<div>
-						    		<button class="btn btn-success mr-2" data-accept-friend-request="{{ $friendshipRequested->id }}">Aceitar</button>
-						    		<button class="btn btn-secondary" data-remove-friend-request="{{ $friendshipRequested->id }}">Excluir</button>
+						    		<button class="btn btn-success mr-2" data-accept-friend-request="{{ $friendshipRequested->id }}" data-keepOpenOnClick>Aceitar</button>
+						    		<button class="btn btn-secondary" data-remove-friend-request="{{ $friendshipRequested->id }}" data-keepOpenOnClick>Excluir</button>
 						    	</div>
 						    </a>
 						    @endforeach
