@@ -23,9 +23,11 @@ class UserPostController extends Controller
 	public function getPostById($id)
 	{
 		$post = UserPost::where('user_has_posts.id', $id)
-			->select('user_has_posts.id', 'user_has_posts.post', 'users.first_name', 'users.last_name')
+			->select('user_has_posts.id', 'user_has_posts.post', 'users.first_name', 'users.last_name', 'settings.cover_photo')
 			->join('users', 'users.id', '=', 'user_has_posts.user_id')
-			->first();
+			->join('settings', 'settings.user_id', '=', 'users.id')
+			->first()
+			->toJson();
 		return $post;
 	}
 

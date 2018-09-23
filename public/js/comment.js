@@ -83,7 +83,7 @@
 		return `<div class="mt-2 w-100" data-comment-user-id="${response.id}">
 					<div class="row">
 						<div class="col-1"">
-							<img class="rounded-circle mt-1" src="/images/default.jpg" width="35">
+							<img class="rounded-circle mt-1" src="/images/cover_photo_user/${response.cover_photo}" width="35">
 						</div>
 						<div class="col-11 d-flex align-items-center pt-1">
 							<a href="profile/${response.slug}">

@@ -70,7 +70,7 @@
 	function addPost(post) {
 		const card = `<div class="card col-12 mb-2 w-100" data-post-id="${post.id}">
 			<div class="row">
-				${getProfileImage()}
+				${getProfileImage(post.cover_photo)}
 				${getFormattedName(post)}
 				<span class="d-block ml-auto pt-3 pr-3">
 					1 segundo atrás
@@ -80,7 +80,7 @@
 			${getCountLikesAndComments()}
 			<hr>
 			${getIcons()}
-			${getCommentArea()}
+			${getCommentArea(post.cover_photo)}
 		</div>`	
 		posts.insertAdjacentHTML('afterbegin', card)
 		cleanFields()
@@ -115,9 +115,9 @@
 		</div>`
 	}
 
-	function getProfileImage() {
+	function getProfileImage(photo) {
 		return `<div class="col-1 mr-3">
-					<img src="/images/default.jpg" class="rounded-circle mt-2 mb-2" width="50">
+					<img src="/images/cover_photo_user/${photo}" class="rounded-circle mt-2 mb-2" width="50">
 				</div>`
 	}
 
@@ -147,10 +147,10 @@
 		</div>`
 	}
 
-	function getCommentArea() {
+	function getCommentArea(photo) {
 		return `<div class="row bg-light pl-4 pb-2 pt-2 d-none" data-comment-area>
 				<div>
-					<img class="rounded-circle mt-1" src="/images/default.jpg" width="35">
+					<img class="rounded-circle mt-1" src="/images/cover_photo_user/${photo}" width="35">
 				</div>
 				<div class="col-11">
 					<input type="" name="" class="form-control h-50" data-input-comment>

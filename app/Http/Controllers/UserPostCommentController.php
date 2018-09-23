@@ -21,14 +21,15 @@ class UserPostCommentController extends Controller
 
     public function getLastCommentInserted($postId) {
     	$data = [
-    		'user_id' => Auth::user()->id,
+    		'user_posts_has_comments.user_id' => Auth::user()->id,
     		'post_id' => $postId
  		];
     	return UserPostComment::where($data)
     		->select('user_posts_has_comments.id', 'user_posts_has_comments.comment', 
-    				'users.id', 'users.slug',
-    				'users.first_name', 'users.last_name')
+    				'users.id', 'users.slug', 'users.first_name', 
+                    'users.last_name', 'settings.cover_photo')
     		->join('users', 'user_posts_has_comments.user_id', '=', 'users.id')
+            ->join('settings', 'settings.user_id', '=', 'users.id')
     		->orderBy('user_posts_has_comments.created_at', 'desc')
     		->first()
     		->toArray();
