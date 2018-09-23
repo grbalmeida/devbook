@@ -7,7 +7,7 @@
 	<div class="row">
 	@component('components.sidebar-groups-friends', ['user' => $user, 'friends' => $friends, 'groups' => $groups])
 	@endcomponent
-	@component('components.create-post', ['friendsPosts' => $friendsPosts, 'elapsedTime' => $elapsedTime, 'userHasLikedPost' => $userHasLikedPost])
+	@component('components.create-post', ['friendsPosts' => $friendsPosts, 'elapsedTime' => $elapsedTime, 'userHasLikedPost' => $userHasLikedPost, 'user' => $user])
 	@endcomponent
 	@component('components.friendship-suggestions', ['friendshipSuggestions' => $friendshipSuggestions])
 	@endcomponent

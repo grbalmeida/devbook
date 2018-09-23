@@ -17,7 +17,7 @@ class Settings extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->string('profile_picture', 150)->nullable();
-            $table->string('cover_photo', 150)->nullable();
+            $table->string('cover_photo', 150)->nullable()->default('default.jpg');
             $table->text('biography')->nullable();
             $table->string('hometown', 150)->nullable();
             $table->string('actual_city', 150)->nullable();

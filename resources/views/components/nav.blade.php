@@ -8,7 +8,7 @@
 			<div class="row">
 				<div class="col-6">
 					<a href="{{ route('profile.index', $user->slug) }}" class="text-dark">
-						<img src="{{ url('/images/default.jpg') }}" width="50" class="rounded-circle"> |
+						<img src="{{ url('/images/cover_photo_user')}}/{{$user->cover_photo}}" width="50" class="rounded-circle"> |
 						<span>{{ $user->first_name.' '.$user->last_name }}</span>
 					</a>
 				</div>
@@ -26,7 +26,7 @@
 						    @foreach($friendshipRequesteds as $friendshipRequested)
 						    <a class="dropdown-item" href="{{ route('profile.index', $friendshipRequested->slug) }}">
 						    	<div>
-						    		<img src="{{ url('/images/default.jpg') }}" width="50" class="rounded-circle">
+						    		<img src="{{ url('/images/cover_photo_user')}}/{{ $friendshipRequested->cover_photo }}" width="50" class="rounded-circle">
 						    		{{ $friendshipRequested->first_name.' '.$friendshipRequested->last_name }}
 						    	</div>
 						    	<div class="w-100 mb-2"></div>

@@ -12,6 +12,8 @@ use App\Models\Groups\GroupMember;
 use App\Models\Groups\Group;
 use App\Models\Users\UserPost;
 use App\Models\Users\UserPostLike;
+use App\Models\Users\Setting;
+use App\Models\Users\Permission;
 
 class HomepageController extends Controller
 {
@@ -25,7 +27,7 @@ class HomepageController extends Controller
                 ->with('user', Auth::user());
         } else {
             return view('homepage')
-                ->with('user', Auth::user())
+                ->with('user', $this->getUser())
                 ->with('friends', $this->getFriends())
                 ->with('groups', $this->getGroups())
                 ->with('count', $this->getCountFriendshipRequest())
@@ -45,7 +47,7 @@ class HomepageController extends Controller
                 ->with('date_error', 'Informe uma data válida');
         }
 
-        User::insert([
+        $user = User::create([
             'first_name' => $request->input('first_name'),
             'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
@@ -53,6 +55,12 @@ class HomepageController extends Controller
             'gender' => $request->input('gender'),
             'birthday' => date('Y-m-d', strtotime($request->input('day').'-'.$request->input('month').'-'.$request->input('year'))),
             'slug' => $this->generateSlug($request->input('first_name'), $request->input('last_name'))
+        ]);
+        $setting = Setting::create([
+            'user_id' => $user->id,
+        ]);
+        $permission = Permission::create([
+            'user_id' => $user->id
         ]);
         return $this->auth($request, 'email', 'password');
     }
@@ -84,7 +92,8 @@ class HomepageController extends Controller
     {
         $friendsId = Auth::user()
             ->friends()
-            ->limit(5)
+            ->limit(8)
+            ->select('friend_id')
             ->get()
             ->toArray();
         return $friendsId;
@@ -102,8 +111,9 @@ class HomepageController extends Controller
 
     public function getFriends() 
     {
-        $friends = User::whereIn('id', $this->getFriendsId())
-            ->select('first_name', 'last_name', 'slug')
+        $friends = User::whereIn('users.id', $this->getFriendsId())
+            ->select('first_name', 'last_name', 'slug', 'cover_photo')
+            ->join('settings', 'settings.user_id', '=', 'users.id')
             ->get();
         return $friends;
     }
@@ -119,11 +129,12 @@ class HomepageController extends Controller
 
     public function getFriendhipSuggestions()
     {
-        $friendshipSuggestions = User::whereNotIn('id', $this->getAllFriendsId())
-            ->select('first_name', 'last_name', 'slug', 'id')
-            ->where('id', '!=', Auth::user()->id)
-            ->whereNotIn('id', $this->getFriendhipRequests())
-            ->whereNotIn('id', $this->getIdWhoAskedForRequest())
+        $friendshipSuggestions = User::whereNotIn('users.id', $this->getAllFriendsId())
+            ->select('first_name', 'last_name', 'slug', 'users.id', 'cover_photo')
+            ->where('users.id', '!=', Auth::user()->id)
+            ->whereNotIn('users.id', $this->getFriendhipRequests())
+            ->whereNotIn('users.id', $this->getIdWhoAskedForRequest())
+            ->join('settings', 'users.id', '=','settings.user_id')
             ->limit(3)
             ->get();
         return $friendshipSuggestions;
@@ -132,7 +143,11 @@ class HomepageController extends Controller
     public function getFriendhipRequesteds()
     {
         $friendshipRequesteds = $this->getIdWhoAskedForRequest();
-        $friendshipRequesteds = User::whereIn('id', $friendshipRequesteds)->get();
+        $friendshipRequesteds = User::whereIn('users.id', $friendshipRequesteds)
+            ->select('users.id', 'first_name', 'last_name', 'slug', 'cover_photo')
+            ->join('settings', 'users.id', '=', 'settings.user_id')
+            ->limit(3)
+            ->get();
         return $friendshipRequesteds;
     }
 
@@ -173,10 +188,15 @@ class HomepageController extends Controller
     public function getFriendsPosts()
     {
         $friendsPosts = UserPost::whereIn('user_has_posts.user_id', $this->getFriendsId())
-            ->select('user_has_posts.id', 'users.first_name', 'users.last_name', 'users.slug', DB::raw('user_has_posts.user_id as user_has_posts_user_id'), 'user_has_posts.post', 'user_has_posts.created_at', DB::raw('COUNT(DISTINCT user_posts_has_likes.id) as count_likes'), DB::raw('COUNT(DISTINCT user_posts_has_comments.id) as count_comments'))
+            ->select('user_has_posts.id', 'users.first_name', 'users.last_name', 'users.slug', DB::raw('user_has_posts.user_id as user_has_posts_user_id'), 'user_has_posts.post', 'user_has_posts.created_at', 
+                DB::raw('COUNT(DISTINCT user_posts_has_likes.id) as count_likes'), 
+                DB::raw('COUNT(DISTINCT user_posts_has_comments.id) as count_comments'),
+                'settings.cover_photo'
+            )
             ->join('users', 'users.id', '=', 'user_has_posts.user_id')
             ->leftJoin('user_posts_has_likes', 'user_posts_has_likes.post_id', 'user_has_posts.id')
             ->leftJoin('user_posts_has_comments', 'user_posts_has_comments.post_id', 'user_has_posts.id')
+            ->join('settings', 'users.id', '=', 'settings.user_id')
             ->orderBy('user_has_posts.created_at', 'desc')
             ->limit(5)
             ->groupBy('user_has_posts.id')
@@ -194,6 +214,15 @@ class HomepageController extends Controller
             ])->count();
             return $userLikedPost;
         };
+    }
+
+    public function getUser() {
+        $user = Auth::user()
+            ->select('first_name', 'last_name', 'slug', 'cover_photo')
+            ->join('settings', 'users.id', '=', 'settings.user_id')
+            ->where('users.id', Auth::user()->id)
+            ->first();
+        return $user;
     }
 
     public function getDays() 

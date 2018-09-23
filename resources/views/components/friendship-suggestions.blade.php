@@ -5,7 +5,7 @@
 		@foreach($friendshipSuggestions as $friendshipSuggestion)
 		<div class="row">
 			<a href="{{ route('profile.index', $friendshipSuggestion->slug) }}">
-				<img src="{{ url('images/default.jpg') }}" height="40" class="rounded-circle">
+				<img src="{{ url('images/cover_photo_user')}}/{{ $friendshipSuggestion->cover_photo }}" height="40" class="rounded-circle">
 				<span class="db-block ml-3">{{ $friendshipSuggestion->first_name.' '.$friendshipSuggestion->last_name }}</span>
 			</a>
 			<i class="fas fa-times d-block pt-2 ml-5" style="font-size: 20px; cursor: pointer;" data-cancel-friendship-suggestion="{{ $friendshipSuggestion->id }}"></i>

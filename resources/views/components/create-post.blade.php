@@ -24,9 +24,11 @@
 		<div class="card col-12 mb-2 w-100" data-post-id="{{ $friendPost->id }}">
 			<div class="row">
 				<div class="col-1 mr-3">
-					<img src="{{ url('images/default.jpg') }}" class="rounded-circle mt-2 mb-2" width="50">
+					<img src="{{ url('images/cover_photo_user')}}/{{ $friendPost->cover_photo }}" class="rounded-circle mt-2 mb-2" width="50">
 				</div>
-				<span class="col-7 pt-3 d-block">{{ $friendPost->first_name.' '.$friendPost->last_name }}</span>
+				<span class="col-7 pt-3 d-block">
+					<a href="{{ route('profile.index', $friendPost->slug) }}">{{ $friendPost->first_name.' '.$friendPost->last_name }}</a>
+				</span>
 				<span class="d-block ml-auto pt-3 pr-3">
 					{{ $elapsedTime($friendPost->created_at) }}
 				</span>
@@ -61,7 +63,7 @@
 			</div>
 			<div class="row bg-light pl-4 pb-2 pt-2 d-none" data-comment-area>
 				<div>
-					<img class="rounded-circle mt-1" src="{{ url('images/default.jpg') }}" width="35">
+					<img class="rounded-circle mt-1" src="{{ url('images/cover_photo_user')}}/{{ $user->cover_photo }}" width="35">
 				</div>
 				<div class="col-11">
 					<input type="text" class="form-control h-50" data-input-comment>
