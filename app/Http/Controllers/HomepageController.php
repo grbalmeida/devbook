@@ -85,7 +85,6 @@ class HomepageController extends Controller
         $friendsId = Auth::user()
             ->friends()
             ->limit(5)
-            ->select('friend_id')
             ->get()
             ->toArray();
         return $friendsId;
@@ -103,25 +102,31 @@ class HomepageController extends Controller
 
     public function getFriends() 
     {
-        $friends = User::whereIn('id', $this->getFriendsId())->get();
+        $friends = User::whereIn('id', $this->getFriendsId())
+            ->select('first_name', 'last_name', 'slug')
+            ->get();
         return $friends;
     }
 
     public function getCountFriendshipRequest()
     {
-        $count = Auth::user()->friendshipRequesteds()->count();
+        $count = Auth::user()
+            ->friendshipRequesteds()
+            ->select('id')
+            ->count();
         return $count;
     }
 
     public function getFriendhipSuggestions()
     {
-        $friendshipSugestions = User::whereNotIn('id', $this->getFriendsId())
+        $friendshipSuggestions = User::whereNotIn('id', $this->getAllFriendsId())
+            ->select('first_name', 'last_name', 'slug', 'id')
             ->where('id', '!=', Auth::user()->id)
             ->whereNotIn('id', $this->getFriendhipRequests())
             ->whereNotIn('id', $this->getIdWhoAskedForRequest())
             ->limit(3)
             ->get();
-        return $friendshipSugestions;
+        return $friendshipSuggestions;
     }
 
     public function getFriendhipRequesteds()
@@ -158,7 +163,10 @@ class HomepageController extends Controller
             ->limit(5)
             ->get()
             ->toArray();
-        $groups = Group::whereIn('id', $groupsId)->limit(5)->get();
+        $groups = Group::whereIn('id', $groupsId)
+            ->select('id', 'name', 'cover_photo')
+            ->limit(5)
+            ->get();
         return $groups;
     }
 
