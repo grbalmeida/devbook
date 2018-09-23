@@ -14,7 +14,9 @@ class UserPostCommentController extends Controller
     		'user_id' => Auth::user()->id,
     		'comment' => $comment
     	]);
-    	return response($this->getLastCommentInserted($postId), 200);
+        $response = $this->getLastCommentInserted($postId);
+        $response['count'] = $this->getCountCommentsById($postId);
+    	return response(json_encode($response), 200);
     }
 
     public function getLastCommentInserted($postId) {
@@ -29,7 +31,12 @@ class UserPostCommentController extends Controller
     		->join('users', 'user_posts_has_comments.user_id', '=', 'users.id')
     		->orderBy('user_posts_has_comments.created_at', 'desc')
     		->first()
-    		->toJson();
+    		->toArray();
+    }
+
+    public function getCountCommentsById($postId) {
+        return UserPostComment::where('post_id', $postId)
+            ->count();
     }
 
 }

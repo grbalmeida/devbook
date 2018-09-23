@@ -57,11 +57,26 @@
 		const commentInformations = getCommentInformations(response)
 		const btnComment = commentArea.children[1]
 		btnComment.parentNode.insertAdjacentHTML('afterend', commentInformations)
+		changeCommentCount(btnComment, response)
 	}
 
 	function cleanFields(input) {
 		input.value = ''
 		input.focus()
+	}
+
+	function changeCommentCount(btnComment, response) {
+		const card = btnComment.parentNode.parentNode.parentNode
+		const countCommentsLikes = card.children[2]
+		const countComments = countCommentsLikes.firstElementChild.children[1]
+		countComments.textContent = getFormattedCountComments(response.count)
+	}
+
+	function getFormattedCountComments(count) {
+		if(count > 1) {
+			return `${count} comentários`
+		}
+		return `${count} comentário`
 	}
 
 	function getCommentInformations(response) {
