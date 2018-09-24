@@ -122,7 +122,9 @@
 	}
 
 	function getFormattedName(post) {
-		return `<span class="col-7 pt-3 d-block">${post.first_name} ${post.last_name}</span>`
+		return `<span class="col-7 pt-3 d-block">
+			<a href="/profile/${post.slug}">${post.first_name} ${post.last_name}</a>
+		</span>`
 	}
 
 	function getCountLikesAndComments() {
