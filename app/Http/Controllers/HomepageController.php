@@ -26,14 +26,15 @@ class HomepageController extends Controller
         		->with('years', $this->getYears())
                 ->with('user', Auth::user());
         } else {
-            session(['friendshipRequesteds' => $this->getFriendhipRequesteds()]);
+            session(['friendshipRequesteds' => $this->getFriendshipRequesteds()]);
+            session(['friendshipSuggestions' => $this->getFriendshipSuggestions()]);
             return view('homepage')
                 ->with('user', $this->getUser())
                 ->with('friends', $this->getFriends())
                 ->with('groups', $this->getGroups())
                 ->with('count', $this->getCountFriendshipRequest())
-                ->with('friendshipSuggestions', $this->getFriendhipSuggestions())
-                ->with('friendshipRequesteds', $this->getFriendhipRequesteds())
+                ->with('friendshipSuggestions', $this->getFriendshipSuggestions())
+                ->with('friendshipRequesteds', $this->getFriendshipRequesteds())
                 ->with('friendsPosts', $this->getFriendsPosts())
                 ->with('elapsedTime', $this->getElapsedTime())
                 ->with('userHasLikedPost', $this->userHasLikedPost());
@@ -128,20 +129,20 @@ class HomepageController extends Controller
         return $count;
     }
 
-    public function getFriendhipSuggestions()
+    public function getFriendshipSuggestions($limit = 3)
     {
         $friendshipSuggestions = User::whereNotIn('users.id', $this->getAllFriendsId())
             ->select('first_name', 'last_name', 'slug', 'users.id', 'cover_photo')
             ->where('users.id', '!=', Auth::user()->id)
-            ->whereNotIn('users.id', $this->getFriendhipRequests())
+            ->whereNotIn('users.id', $this->getFriendshipRequests())
             ->whereNotIn('users.id', $this->getIdWhoAskedForRequest())
             ->join('settings', 'users.id', '=','settings.user_id')
-            ->limit(3)
+            ->limit($limit)
             ->get();
         return $friendshipSuggestions;
     }
 
-    public function getFriendhipRequesteds()
+    public function getFriendshipRequesteds()
     {
         $friendshipRequesteds = $this->getIdWhoAskedForRequest();
         $friendshipRequesteds = User::whereIn('users.id', $friendshipRequesteds)
@@ -152,7 +153,7 @@ class HomepageController extends Controller
         return $friendshipRequesteds;
     }
 
-    public function getFriendhipRequests()
+    public function getFriendshipRequests()
     {
         $friendshipRequests = Auth::user()
             ->friendshipRequests()

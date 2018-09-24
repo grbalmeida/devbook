@@ -8,6 +8,7 @@ use App\Models\Users\User;
 use App\Models\Users\FriendshipRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Users\Relationship;
+use App\Http\Controllers\HomepageController;
 
 class AddFriendController extends Controller
 {
@@ -19,9 +20,8 @@ class AddFriendController extends Controller
 				'requested_user_id' => $requestedUserId,
 				'request_user_id' => Auth::user()->id
 			]);
-			return response('true', 200);
 		}
-		return response('', 200);
+		return response($this->getFriendshipsSuggestionsRemaining($requestedUserId), 200);
 	}   
 
 	public function destroy($requestUserId)
@@ -72,6 +72,36 @@ class AddFriendController extends Controller
 			->first();
 		session()->push('friendshipRequesteds', $anotherFriendshipRequesteds);
 		return json_encode($anotherFriendshipRequesteds);
+	}
+
+	public function getFriendshipsSuggestionsRemaining($requestUserId) {
+		$friendshipSuggestions = session('friendshipSuggestions');
+		foreach($friendshipSuggestions as $id => $friendshipSuggestion) {
+			if($friendshipSuggestion['id'] == $requestUserId) {
+				unset($friendshipSuggestions[$id]);
+			}
+		}
+		return $this->getAnotherFriendshipSuggestion($friendshipSuggestions);
+	}
+
+	public function getAnotherFriendshipSuggestion($friendshipSuggestions) {
+		$friendshipSuggestion = [];
+		foreach($friendshipSuggestions as $id => $friendship) {
+			array_push($friendshipSuggestion, $friendship['id']);
+		}
+		$homepageController = new HomepageController();
+		$anotherFriendshipSuggestion = User::whereNotIn('users.id', $friendshipSuggestion)
+			->whereNotIn('users.id', $homepageController->getFriendshipRequests())
+			->whereNotIn('users.id', $homepageController->getIdWhoAskedForRequest())
+			->whereNotIn('users.id', $homepageController->getAllFriendsId())
+			->where('users.id', '!=', Auth::user()->id)
+			->select('users.id', 'users.first_name', 'users.last_name',
+					'users.slug', 'settings.cover_photo')
+			->join('settings', 'users.id', '=', 'settings.user_id')
+			->limit(1)
+			->first();
+		session()->push('friendshipSuggestions', $anotherFriendshipSuggestion);
+		return json_encode($anotherFriendshipSuggestion);
 	}
 
 }

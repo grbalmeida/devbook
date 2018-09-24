@@ -44,6 +44,9 @@
 	function removeFriendshipSuggestion(response, target) {
 		const friendshipSuggestion = document.querySelector(target)
 		friendshipSuggestions.removeChild(friendshipSuggestion.parentNode)
+		if(response != null) {
+			friendshipSuggestions.insertAdjacentHTML('beforeend', getAnotherFriendSuggestion(response));
+		}
 	}
 
 	function removeFriendRequest(event) {
@@ -102,6 +105,18 @@
 	    		<button class="btn btn-secondary" data-remove-friend-request="${response.id}" data-keepOpenOnClick>Excluir</button>
 	    	</div>
 	    </a>`
+	}
+
+	function getAnotherFriendSuggestion(response) {
+		return `<div class="row">
+			<a href="/profile/${response.slug}">
+				<img src="/images/cover_photo_user/${response.cover_photo}" height="40" class="rounded-circle">
+				<span class="db-block ml-3">${response.first_name} ${response.last_name}</span>
+			</a>
+			<i class="fas fa-times d-block pt-2 ml-5" style="font-size: 20px; cursor: pointer;" data-cancel-friendship-suggestion="${response.id}"></i>
+			<div class="w-100"></div>
+			<button class="btn btn-primary mb-3 mt-3" data-user-suggestion-id="${response.id}">Adicionar</button>
+		</div>`
 	}
 
 })()
