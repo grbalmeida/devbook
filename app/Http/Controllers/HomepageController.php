@@ -189,7 +189,7 @@ class HomepageController extends Controller
 
     public function getFriendsPosts()
     {
-        $friendsPosts = UserPost::whereIn('user_has_posts.user_id', $this->getFriendsId())
+        $friendsPosts = UserPost::whereIn('user_has_posts.user_id', $this->getAllFriendsId())
             ->select('user_has_posts.id', 'users.first_name', 'users.last_name', 'users.slug', DB::raw('user_has_posts.user_id as user_has_posts_user_id'), 'user_has_posts.post', 'user_has_posts.created_at', 
                 DB::raw('COUNT(DISTINCT user_posts_has_likes.id) as count_likes'), 
                 DB::raw('COUNT(DISTINCT user_posts_has_comments.id) as count_comments'),
