@@ -63,7 +63,7 @@
 	}
 
 	function createPost(post) {
-		const url =  `${location.href}add-post/${post}`
+		const url =  `${location.origin}/add-post/${post}`
 		makeAjaxPostRequest(url, 'POST', addPost, post)
 	}
 

@@ -26,7 +26,7 @@
 				const comment = inputComment.value
 				const card = commentArea.parentNode.parentNode
 				const postId = card.getAttribute('data-post-id')
-				const url = `${location.href}add-comment/${postId}/${comment}`
+				const url = `${location.origin}/add-comment/${postId}/${comment}`
 				makeAjaxRequest(url, 'POST', postId, comment, addCommentToCommentList, commentArea)
 				cleanFields(inputComment)
 			}

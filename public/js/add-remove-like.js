@@ -11,7 +11,7 @@
 			if(event.target.classList.contains('fa-thumbs-up')) {
 				const card = event.target.parentNode.parentNode.parentNode
 				const postId = card.getAttribute('data-post-id')
-				const url = `${location.href}add-remove-like/${postId}`
+				const url = `${location.origin}/add-remove-like/${postId}`
 				makeAjaxRequest(url, 'POST', postId, changeLikeButton, event.target)
 			}
 		}, 100)

@@ -20,7 +20,7 @@
 	function getRequestedUserId(event) {
 		if(event.target.hasAttribute('data-user-suggestion-id')) {
 			const requestedUserId = event.target.getAttribute('data-user-suggestion-id')
-			const url = `${location.href}add-friend/${requestedUserId}`
+			const url = `${location.origin}/add-friend/${requestedUserId}`
 			makeAjaxRequest(url, 'POST', requestedUserId, removeFriendshipSuggestion, `[data-user-suggestion-id="${requestedUserId}"]`)
 		}
 	}
@@ -53,7 +53,7 @@
 		if(event.target.hasAttribute('data-remove-friend-request')) {
 			event.preventDefault()
 			const requestUserId = event.target.getAttribute('data-remove-friend-request')
-			const url = `${location.href}remove-friend-request/${requestUserId}`
+			const url = `${location.origin}/remove-friend-request/${requestUserId}`
 			makeAjaxRequest(url, 'POST', requestUserId, removeChildFromFriendsRequest, event.target.parentNode.parentNode)
 		}
 	}
@@ -63,7 +63,7 @@
 		if(event.target.hasAttribute('data-accept-friend-request')) {
 			event.preventDefault()
 			const requestUserId = event.target.getAttribute('data-accept-friend-request')
-			const url = `${location.href}accept-friend-request/${requestUserId}`
+			const url = `${location.origin}/accept-friend-request/${requestUserId}`
 			makeAjaxRequest(url, 'POST', requestUserId, removeChildFromFriendsRequest, event.target.parentNode.parentNode)
 		}
 	}
