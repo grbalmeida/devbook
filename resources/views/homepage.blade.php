@@ -4,14 +4,14 @@
 	@component('components.nav', ['user' => $user, 'count' => $count, 'friendshipRequesteds' => $friendshipRequesteds])
 	@endcomponent
 	<div class="container-fluid">
-	<div class="row">
-	@component('components.sidebar-groups-friends', ['user' => $user, 'friends' => $friends, 'groups' => $groups])
-	@endcomponent
-	@component('components.create-post', ['friendsPosts' => $friendsPosts, 'elapsedTime' => $elapsedTime, 'userHasLikedPost' => $userHasLikedPost, 'user' => $user])
-	@endcomponent
-	@component('components.friendship-suggestions', ['friendshipSuggestions' => $friendshipSuggestions])
-	@endcomponent
-	</div>
+		<div class="row mx-auto">
+			@component('components.sidebar-groups-friends', ['user' => $user, 'friends' => $friends, 'groups' => $groups])
+			@endcomponent
+			@component('components.create-post', ['friendsPosts' => $friendsPosts, 'elapsedTime' => $elapsedTime, 'userHasLikedPost' => $userHasLikedPost, 'user' => $user, 'comments' => $comments])
+			@endcomponent
+			@component('components.friendship-suggestions', ['friendshipSuggestions' => $friendshipSuggestions])
+			@endcomponent
+		</div>
 	</div>
 @endauth
 @guest

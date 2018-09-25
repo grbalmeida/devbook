@@ -1,4 +1,4 @@
-<div class="col-5 mt-2 ml-4 mr-3" style="height: 100px;">
+<div class="col-6 mt-2" style="height: 100px;">
 	<div class="card mb-2">
 		<div class="card-body h-50">
 			<form>
@@ -69,6 +69,22 @@
 					<input type="text" class="form-control h-50" data-input-comment>
 					<button class="btn-success border-0 mt-2" data-btn-comment>Comentar</button>
 				</div> 
+				<div data-comments-list>
+					@foreach($comments($friendPost->id) as $comment)
+					<div class="row">
+						<div class="col-1">
+							<img class="rounded-circle mt-1" src="{{ url('images/cover_photo_user')}}/{{ $comment->cover_photo }}" width="35">
+						</div>
+						<div class="ml-3 col-9 pt-2">
+							<a href="{{ route('profile.index', $comment->slug) }}">{{ $comment->first_name.' '.$comment->last_name }} </a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-1"></div>
+						<div class="ml-3 col-9 pt-2">{{ $comment->comment }}</div>
+					</div>
+					@endforeach
+				</div>
 			</div>
 		</div>
 		@endforeach

@@ -42,7 +42,7 @@
 		request.open(method, url)
 		request.setRequestHeader('X-CSRF-TOKEN', token)
 		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-		request.send({postId, comment})
+		request.send()
 
 		request.addEventListener('readystatechange', function() {
 			if(request.readyState === 4 && request.status === 200) {

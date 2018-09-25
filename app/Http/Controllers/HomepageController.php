@@ -14,6 +14,7 @@ use App\Models\Users\UserPost;
 use App\Models\Users\UserPostLike;
 use App\Models\Users\Setting;
 use App\Models\Users\Permission;
+use App\Models\Users\UserPostComment;
 
 class HomepageController extends Controller
 {
@@ -37,6 +38,7 @@ class HomepageController extends Controller
                 ->with('friendshipRequesteds', $this->getFriendshipRequesteds())
                 ->with('friendsPosts', $this->getFriendsPosts())
                 ->with('elapsedTime', $this->getElapsedTime())
+                ->with('comments', $this->getCommentsByPostId())
                 ->with('userHasLikedPost', $this->userHasLikedPost());
         }
     }
@@ -235,6 +237,22 @@ class HomepageController extends Controller
     		array_push($days, $counter);
     	}
     	return $days;
+    }
+
+    public function getCommentsByPostId() {
+        return function($postId) {
+            $comments = UserPostComment::where('post_id', $postId)
+            ->select('user_posts_has_comments.id', 'user_posts_has_comments.post_id',
+            'user_posts_has_comments.user_id', 'user_posts_has_comments.comment',
+            'user_posts_has_comments.created_at', 'users.first_name', 'users.last_name',
+            'users.slug', 'settings.cover_photo')
+            ->join('users', 'users.id', '=', 'user_posts_has_comments.user_id')
+            ->join('settings', 'settings.user_id', '=', 'users.id')
+            ->whereNull('user_posts_has_comments.parent_id')
+            ->limit(2)
+            ->get();
+            return $comments;
+        };
     }
 
     public static function getElapsedTime() 

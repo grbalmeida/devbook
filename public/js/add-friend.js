@@ -11,7 +11,7 @@
 		const cancel = 'data-cancel-friendship-suggestion'
 		const id = event.target.getAttribute(cancel)
 		if(id) {
-			removeFriendshipSuggestion(`[${cancel}="${id}"]`)
+			removeFriendshipSuggestion(null, `[${cancel}="${id}"]`)
 		}
 	})
 	document.addEventListener('click', removeFriendRequest)
