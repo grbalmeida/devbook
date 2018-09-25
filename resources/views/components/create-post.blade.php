@@ -24,7 +24,7 @@
 		<div class="card col-12 mb-2 w-100" data-post-id="{{ $friendPost->id }}">
 			<div class="row">
 				<div class="col-1 mr-3">
-					<img src="{{ url('images/cover_photo_user')}}/{{ $friendPost->cover_photo }}" class="rounded-circle mt-2 mb-2" width="50">
+					<img src="{{ url('images/profile_picture')}}/{{ $friendPost->profile_picture }}" class="rounded-circle mt-2 mb-2" width="50">
 				</div>
 				<span class="col-7 pt-3 d-block">
 					<a href="{{ route('profile.index', $friendPost->slug) }}">{{ $friendPost->first_name.' '.$friendPost->last_name }}</a>
@@ -63,7 +63,7 @@
 			</div>
 			<div class="row bg-light pl-4 pb-2 pt-2 d-none" data-comment-area>
 				<div>
-					<img class="rounded-circle mt-1" src="{{ url('images/cover_photo_user')}}/{{ $user->cover_photo }}" width="35">
+					<img class="rounded-circle mt-1" src="{{ url('images/profile_picture')}}/{{ $user->profile_picture }}" width="35">
 				</div>
 				<div class="col-11">
 					<input type="text" class="form-control h-50" data-input-comment>
@@ -73,7 +73,7 @@
 					@foreach($comments($friendPost->id) as $comment)
 					<div class="row">
 						<div class="col-1">
-							<img class="rounded-circle mt-1" src="{{ url('images/cover_photo_user')}}/{{ $comment->cover_photo }}" width="35">
+							<img class="rounded-circle mt-1" src="{{ url('images/profile_picture')}}/{{ $comment->profile_picture }}" width="35">
 						</div>
 						<div class="ml-3 col-9 pt-2">
 							<a href="{{ route('profile.index', $comment->slug) }}">{{ $comment->first_name.' '.$comment->last_name }} </a>

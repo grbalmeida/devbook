@@ -2,7 +2,7 @@
 	<div class="card-body">
 		<div class="w-100">
 			<a href="{{ route('profile.index', $user->slug) }}" class="text-dark">
-				<img src="{{ url('/images/cover_photo_user')}}/{{ $user->cover_photo }}" width="70" class="rounded-circle"> {{ $user->first_name.' '.$user->last_name }}
+				<img src="{{ url('/images/profile_picture')}}/{{ $user->profile_picture }}" width="70" class="rounded-circle"> {{ $user->first_name.' '.$user->last_name }}
 			</a>
 		</div>
 		<div class="w-100 mt-3"></div>
@@ -12,7 +12,7 @@
 		<div class="">
 			@foreach($friends as $friend)
 			<a href="{{ route('profile.index', $friend->slug) }}" class="text-dark" style="text-decoration: none;">
-				<img src="{{ url('/images/cover_photo_user')}}/{{ $friend->cover_photo }}" class="mb-2" width="57" 
+				<img src="{{ url('/images/profile_picture')}}/{{ $friend->profile_picture }}" class="mb-2" width="57" 
 				title="{{ $friend->first_name.' '.$friend->last_name }}">
 			</a>
 			@endforeach

@@ -116,7 +116,7 @@ class HomepageController extends Controller
     public function getFriends() 
     {
         $friends = User::whereIn('users.id', $this->getFriendsId())
-            ->select('first_name', 'last_name', 'slug', 'cover_photo')
+            ->select('first_name', 'last_name', 'slug', 'profile_picture')
             ->join('settings', 'settings.user_id', '=', 'users.id')
             ->get();
         return $friends;
@@ -134,7 +134,7 @@ class HomepageController extends Controller
     public function getFriendshipSuggestions($limit = 3)
     {
         $friendshipSuggestions = User::whereNotIn('users.id', $this->getAllFriendsId())
-            ->select('first_name', 'last_name', 'slug', 'users.id', 'cover_photo')
+            ->select('first_name', 'last_name', 'slug', 'users.id', 'profile_picture')
             ->where('users.id', '!=', Auth::user()->id)
             ->whereNotIn('users.id', $this->getFriendshipRequests())
             ->whereNotIn('users.id', $this->getIdWhoAskedForRequest())
@@ -148,7 +148,7 @@ class HomepageController extends Controller
     {
         $friendshipRequesteds = $this->getIdWhoAskedForRequest();
         $friendshipRequesteds = User::whereIn('users.id', $friendshipRequesteds)
-            ->select('users.id', 'first_name', 'last_name', 'slug', 'cover_photo')
+            ->select('users.id', 'first_name', 'last_name', 'slug', 'profile_picture')
             ->join('settings', 'users.id', '=', 'settings.user_id')
             ->limit(3)
             ->get();
@@ -183,7 +183,7 @@ class HomepageController extends Controller
             ->get()
             ->toArray();
         $groups = Group::whereIn('id', $groupsId)
-            ->select('id', 'name', 'cover_photo')
+            ->select('id', 'name')
             ->limit(5)
             ->get();
         return $groups;
@@ -195,7 +195,7 @@ class HomepageController extends Controller
             ->select('user_has_posts.id', 'users.first_name', 'users.last_name', 'users.slug', DB::raw('user_has_posts.user_id as user_has_posts_user_id'), 'user_has_posts.post', 'user_has_posts.created_at', 
                 DB::raw('COUNT(DISTINCT user_posts_has_likes.id) as count_likes'), 
                 DB::raw('COUNT(DISTINCT user_posts_has_comments.id) as count_comments'),
-                'settings.cover_photo'
+                'settings.profile_picture'
             )
             ->join('users', 'users.id', '=', 'user_has_posts.user_id')
             ->leftJoin('user_posts_has_likes', 'user_posts_has_likes.post_id', 'user_has_posts.id')
@@ -222,7 +222,7 @@ class HomepageController extends Controller
 
     public function getUser() {
         $user = Auth::user()
-            ->select('first_name', 'last_name', 'slug', 'cover_photo')
+            ->select('first_name', 'last_name', 'slug', 'profile_picture')
             ->join('settings', 'users.id', '=', 'settings.user_id')
             ->where('users.id', Auth::user()->id)
             ->first();
@@ -245,7 +245,7 @@ class HomepageController extends Controller
             ->select('user_posts_has_comments.id', 'user_posts_has_comments.post_id',
             'user_posts_has_comments.user_id', 'user_posts_has_comments.comment',
             'user_posts_has_comments.created_at', 'users.first_name', 'users.last_name',
-            'users.slug', 'settings.cover_photo')
+            'users.slug', 'settings.profile_picture')
             ->join('users', 'users.id', '=', 'user_posts_has_comments.user_id')
             ->join('settings', 'settings.user_id', '=', 'users.id')
             ->whereNull('user_posts_has_comments.parent_id')

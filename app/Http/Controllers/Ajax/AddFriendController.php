@@ -65,7 +65,7 @@ class AddFriendController extends Controller
 		$anotherFriendshipRequesteds = FriendshipRequest::whereNotIn('request_user_id', $friendshipRequested)
 			->where('requested_user_id', Auth::user()->id)
 			->select('users.id', 'users.first_name', 'users.last_name',
-					'users.slug', 'settings.cover_photo')
+					'users.slug', 'settings.profile_picture')
 			->join('users', 'users.id', '=', 'friendship_request.request_user_id')
 			->join('settings', 'users.id', '=', 'settings.user_id')
 			->limit(1)
@@ -96,7 +96,7 @@ class AddFriendController extends Controller
 			->whereNotIn('users.id', $homepageController->getAllFriendsId())
 			->where('users.id', '!=', Auth::user()->id)
 			->select('users.id', 'users.first_name', 'users.last_name',
-					'users.slug', 'settings.cover_photo')
+					'users.slug', 'settings.profile_picture')
 			->join('settings', 'users.id', '=', 'settings.user_id')
 			->limit(1)
 			->first();

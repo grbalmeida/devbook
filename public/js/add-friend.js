@@ -96,7 +96,7 @@
 	function getAnotherFrienshipRequesteds(response) {
 		return `<a class="dropdown-item" href="/profile/${response.slug}">
 	    	<div>
-	    		<img src="/images/cover_photo_user/${response.cover_photo}" width="50" class="rounded-circle">
+	    		<img src="/images/profile_picture/${response.profile_picture}" width="50" class="rounded-circle">
 	    		${response.first_name} ${response.last_name}
 	    	</div>
 	    	<div class="w-100 mb-2"></div>
@@ -110,7 +110,7 @@
 	function getAnotherFriendSuggestion(response) {
 		return `<div class="row">
 			<a href="/profile/${response.slug}">
-				<img src="/images/cover_photo_user/${response.cover_photo}" height="40" class="rounded-circle">
+				<img src="/images/profile_picture/${response.profile_picture}" height="40" class="rounded-circle">
 				<span class="db-block ml-3">${response.first_name} ${response.last_name}</span>
 			</a>
 			<i class="fas fa-times d-block pt-2 ml-5" style="font-size: 20px; cursor: pointer;" data-cancel-friendship-suggestion="${response.id}"></i>
