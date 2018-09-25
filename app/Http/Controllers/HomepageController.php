@@ -8,23 +8,30 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\UserRegistrationRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Models\Users\User;
-use App\Models\Groups\GroupMember;
-use App\Models\Groups\Group;
 use App\Models\Users\UserPost;
 use App\Models\Users\UserPostLike;
 use App\Models\Users\Setting;
 use App\Models\Users\Permission;
 use App\Models\Users\UserPostComment;
+use App\Services\DateService;
+use App\Services\GroupService;
 
 class HomepageController extends Controller
 {
+
+    public function __construct(DateService $dateService, GroupService $groupService)
+    {
+        $this->dateService = $dateService;
+        $this->groupService = $groupService;
+    }
+
     public function index()
     {
         if(Auth::user() == null) {
         	return view('homepage')
-        		->with('days', $this->getDays())
-        		->with('months', $this->getMonths())
-        		->with('years', $this->getYears())
+        		->with('days', $this->dateService->getDays())
+        		->with('months', $this->dateService->getMonths())
+        		->with('years', $this->dateService->getYears())
                 ->with('user', Auth::user());
         } else {
             session(['friendshipRequesteds' => $this->getFriendshipRequesteds()]);
@@ -32,12 +39,12 @@ class HomepageController extends Controller
             return view('homepage')
                 ->with('user', $this->getUser())
                 ->with('friends', $this->getFriends())
-                ->with('groups', $this->getGroups())
+                ->with('groups', $this->groupService->getGroups())
                 ->with('count', $this->getCountFriendshipRequest())
                 ->with('friendshipSuggestions', $this->getFriendshipSuggestions())
                 ->with('friendshipRequesteds', $this->getFriendshipRequesteds())
                 ->with('friendsPosts', $this->getFriendsPosts())
-                ->with('elapsedTime', $this->getElapsedTime())
+                ->with('elapsedTime', $this->dateService->getElapsedTime())
                 ->with('comments', $this->getCommentsByPostId())
                 ->with('userHasLikedPost', $this->userHasLikedPost());
         }
@@ -175,20 +182,6 @@ class HomepageController extends Controller
         return $idWhoAskedForRequest;
     }
 
-    public function getGroups()
-    {
-        $groupsId = GroupMember::where('user_id', Auth::user()->id)
-            ->select('group_id')
-            ->limit(5)
-            ->get()
-            ->toArray();
-        $groups = Group::whereIn('id', $groupsId)
-            ->select('id', 'name')
-            ->limit(5)
-            ->get();
-        return $groups;
-    }
-
     public function getFriendsPosts()
     {
         $friendsPosts = UserPost::whereIn('user_has_posts.user_id', $this->getAllFriendsId())
@@ -229,16 +222,6 @@ class HomepageController extends Controller
         return $user;
     }
 
-    public function getDays() 
-    {
-    	$days = [];
-    	for($counter = 1; $counter <= 31; $counter++) 
-    	{
-    		array_push($days, $counter);
-    	}
-    	return $days;
-    }
-
     public function getCommentsByPostId() {
         return function($postId) {
             $comments = UserPostComment::where('post_id', $postId)
@@ -253,50 +236,6 @@ class HomepageController extends Controller
             ->get();
             return $comments;
         };
-    }
-
-    public static function getElapsedTime() 
-    {
-        return function($time) {
-            $now = strtotime(date('m/d/Y H:i:s'));
-            $time = strtotime($time);
-            $diff = $now - $time;
-
-            $seconds = $diff;
-            $minutes = round($diff / 60);
-            $hours = round($diff / 3600);
-            $days = round($diff / 86400);
-            $months = round($diff / 2419200);
-            $years = round($diff / 29030400);
-
-            if ($seconds <= 60) return '1 min atrás';
-            else if ($minutes <= 60) return $minutes==1 ?'1 min atrás':$minutes.' min atrás';
-            else if ($hours <= 24) return $hours==1 ?'1 hrs atrás':$hours.' hrs atrás';
-            else if ($days <= 7) return $days==1 ?'1 dia atras':$days.' dias atrás';
-            else if ($months <= 12) return $months == 1 ?'1 mês atrás':$months.' meses atrás';
-            else return $years == 1 ? 'um ano atrás':$years.' anos atrás';
-        };
-    }
-
-    public function getMonths()
-    {
-    	$months = [
-    		'Jan', 'Fev', 'Mar',
-    		'Abr', 'Maio', 'Jun',
-    		'Jul', 'Ago', 'Set',
- 			'Out', 'Nov', 'Dez'
-    	];
-    	return $months;
-    }
-
-    public function getYears()
-    {
-    	$years = [];
-    	for($counter = intval(date('Y')); $counter > 1900; $counter--) 
-        {
-    		array_push($years, $counter);
-    	}
-    	return $years;
     }
 
     public function generateSlug($firstName, $lastName)

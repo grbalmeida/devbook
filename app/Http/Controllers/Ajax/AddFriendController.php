@@ -9,6 +9,8 @@ use App\Models\Users\FriendshipRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Users\Relationship;
 use App\Http\Controllers\HomepageController;
+use App\Services\DateService;
+use App\Services\GroupService;
 
 class AddFriendController extends Controller
 {
@@ -89,7 +91,7 @@ class AddFriendController extends Controller
 		foreach($friendshipSuggestions as $id => $friendship) {
 			array_push($friendshipSuggestion, $friendship['id']);
 		}
-		$homepageController = new HomepageController();
+		$homepageController = new HomepageController(new DateService(), new GroupService());
 		$anotherFriendshipSuggestion = User::whereNotIn('users.id', $friendshipSuggestion)
 			->whereNotIn('users.id', $homepageController->getFriendshipRequests())
 			->whereNotIn('users.id', $homepageController->getIdWhoAskedForRequest())
