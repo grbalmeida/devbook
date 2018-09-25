@@ -1,6 +1,5 @@
 (function() {
 
-	const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 	const friendshipSuggestions = document.querySelector('[data-friendship-suggestions]')
 	const friendshipRequests = document.querySelector('[data-friends-request]')
 	const iconUserFriends = document.querySelector('.fa-user-friends')
@@ -18,17 +17,18 @@
 	document.addEventListener('click', acceptFriendRequest)
 
 	function getRequestedUserId(event) {
-		if(event.target.hasAttribute('data-user-suggestion-id')) {
-			const requestedUserId = event.target.getAttribute('data-user-suggestion-id')
+		const suggestion = 'data-user-suggestion-id'
+		if(event.target.hasAttribute(suggestion)) {
+			const requestedUserId = event.target.getAttribute(suggestion)
 			const url = `${location.origin}/add-friend/${requestedUserId}`
-			makeAjaxRequest(url, 'POST', requestedUserId, removeFriendshipSuggestion, `[data-user-suggestion-id="${requestedUserId}"]`)
+			makeAjaxRequest(url, 'POST', requestedUserId, removeFriendshipSuggestion, `[${suggestion}="${requestedUserId}"]`)
 		}
 	}
 
 	function makeAjaxRequest(url, method, userId, callback, argument) {
 		const request = new XMLHttpRequest()
 		request.open(method, url)
-		request.setRequestHeader('X-CSRF-TOKEN', token)
+		request.setRequestHeader('X-CSRF-TOKEN', token())
 		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		request.send({ userId })
 
@@ -50,21 +50,25 @@
 	}
 
 	function removeFriendRequest(event) {
-		if(event.target.hasAttribute('data-remove-friend-request')) {
+		const friendRequest = 'data-remove-friend-request'
+		if(event.target.hasAttribute(friendRequest)) {
 			event.preventDefault()
-			const requestUserId = event.target.getAttribute('data-remove-friend-request')
+			const target = event.target
+			const requestUserId = target.getAttribute(friendRequest)
 			const url = `${location.origin}/remove-friend-request/${requestUserId}`
-			makeAjaxRequest(url, 'POST', requestUserId, removeChildFromFriendsRequest, event.target.parentNode.parentNode)
+			makeAjaxRequest(url, 'POST', requestUserId, removeChildFromFriendsRequest, target.closest('.dropdown-item'))
 		}
 	}
 
 	function acceptFriendRequest(event)
 	{
-		if(event.target.hasAttribute('data-accept-friend-request')) {
+		const friendRequest = 'data-accept-friend-request'
+		if(event.target.hasAttribute(friendRequest)) {
 			event.preventDefault()
-			const requestUserId = event.target.getAttribute('data-accept-friend-request')
+			const target = event.target
+			const requestUserId = target.getAttribute(friendRequest)
 			const url = `${location.origin}/accept-friend-request/${requestUserId}`
-			makeAjaxRequest(url, 'POST', requestUserId, removeChildFromFriendsRequest, event.target.parentNode.parentNode)
+			makeAjaxRequest(url, 'POST', requestUserId, removeChildFromFriendsRequest, target.closest('.dropdown-item'))
 		}
 	}
 

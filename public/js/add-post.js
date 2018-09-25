@@ -4,7 +4,6 @@
 
 	const btnPost = document.querySelector('[data-post-btn]')
 	const form = document.querySelector('form')
-	const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 	const textarea = document.querySelector('textarea')
 	const posts = document.querySelector('[data-posts]')
 	const countWords = document.querySelector('[data-count-words]')
@@ -94,7 +93,7 @@
 	function makeAjaxPostRequest(url, method, callback, post) {
 		const request = new XMLHttpRequest()
 		request.open(method, url)
-		request.setRequestHeader('X-CSRF-TOKEN', token)
+		request.setRequestHeader('X-CSRF-TOKEN', token())
 		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		request.send({ post })
 

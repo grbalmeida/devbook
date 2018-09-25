@@ -3,7 +3,6 @@
 	'use strict'
 
 	const body = document.querySelector('body')
-	const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
 
 	body.addEventListener('click', showCommentArea)
 	body.addEventListener('click', commentPost)
@@ -11,7 +10,7 @@
 	function showCommentArea(event) {
 		const target = event.target
 		if(target.classList.contains('fa-comment')) {
-			const card = target.parentNode.parentNode.parentNode
+			const card = target.closest('.card')
 			const commentArea = card.querySelector('[data-comment-area]')
 			commentArea.classList.remove('d-none')
 		}
@@ -24,7 +23,7 @@
 			const inputComment = commentArea.querySelector('[data-input-comment]')
 			if(isEmptyInputComment(inputComment)) {
 				const comment = inputComment.value
-				const card = commentArea.parentNode.parentNode
+				const card = commentArea.closest('.card')
 				const postId = card.getAttribute('data-post-id')
 				const url = `${location.origin}/add-comment/${postId}/${comment}`
 				makeAjaxRequest(url, 'POST', postId, comment, addCommentToCommentList, commentArea)
@@ -40,7 +39,7 @@
 	function makeAjaxRequest(url, method, postId, comment, callback, commentArea) {
 		const request = new XMLHttpRequest()
 		request.open(method, url)
-		request.setRequestHeader('X-CSRF-TOKEN', token)
+		request.setRequestHeader('X-CSRF-TOKEN', token())
 		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		request.send()
 
@@ -66,7 +65,7 @@
 	}
 
 	function changeCommentCount(btnComment, response) {
-		const card = btnComment.parentNode.parentNode.parentNode
+		const card = btnComment.closest('.card')
 		const countCommentsLikes = card.children[2]
 		const countComments = countCommentsLikes.firstElementChild.children[1]
 		countComments.textContent = getFormattedCountComments(response.count)

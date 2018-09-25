@@ -2,23 +2,22 @@
 
 	'use strict'
 
-	const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-
 	document.addEventListener('click', addRemoveLike)
 
 	function addRemoveLike(event) {
 		setTimeout(() => {
 			if(event.target.classList.contains('fa-thumbs-up')) {
-				const card = event.target.parentNode.parentNode.parentNode
+				const target = event.target
+				const card = target.closest('.card')
 				const postId = card.getAttribute('data-post-id')
 				const url = `${location.origin}/add-remove-like/${postId}`
-				makeAjaxRequest(url, 'POST', postId, changeLikeButton, event.target)
+				makeAjaxRequest(url, 'POST', postId, changeLikeButton, target)
 			}
 		}, 100)
 	}
 
 	function changeLikeButton(response, button) {
-		const card = button.parentNode.parentNode.parentNode
+		const card = button.closest('.card')
 		const countLikesAndComments = card.children[2]
 		const countLikes = countLikesAndComments.children[0].children[0]
 		if(response.count == 1) {
@@ -32,7 +31,7 @@
 	function makeAjaxRequest(url, method, postId, callback, button) {
 		const request = new XMLHttpRequest()
 		request.open(method, url)
-		request.setRequestHeader('X-CSRF-TOKEN', token)
+		request.setRequestHeader('X-CSRF-TOKEN', token())
 		request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		request.send({ postId })
 
