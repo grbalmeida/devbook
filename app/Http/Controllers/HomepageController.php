@@ -15,14 +15,24 @@ use App\Models\Users\Permission;
 use App\Models\Users\UserPostComment;
 use App\Services\DateService;
 use App\Services\GroupService;
+use App\Services\FriendService;
+use App\Services\FriendshipService;
+use App\Services\UserService;
+use App\Services\CommentService;
 
 class HomepageController extends Controller
 {
 
-    public function __construct(DateService $dateService, GroupService $groupService)
+    public function __construct(DateService $dateService, GroupService $groupService, 
+        FriendService $friendService, FriendshipService $friendshipService, 
+        UserService $userService, CommentService $commentService)
     {
         $this->dateService = $dateService;
         $this->groupService = $groupService;
+        $this->friendService = $friendService;
+        $this->friendshipService = $friendshipService;
+        $this->userService = $userService;
+        $this->commentService = $commentService;
     }
 
     public function index()
@@ -34,18 +44,18 @@ class HomepageController extends Controller
         		->with('years', $this->dateService->getYears())
                 ->with('user', Auth::user());
         } else {
-            session(['friendshipRequesteds' => $this->getFriendshipRequesteds()]);
-            session(['friendshipSuggestions' => $this->getFriendshipSuggestions()]);
+            session(['friendshipRequesteds' => $this->friendshipService->getFriendshipRequesteds()]);
+            session(['friendshipSuggestions' => $this->friendshipService->getFriendshipSuggestions()]);
             return view('homepage')
-                ->with('user', $this->getUser())
-                ->with('friends', $this->getFriends())
+                ->with('user', $this->userService->getUser())
+                ->with('friends', $this->friendService->getFriends())
                 ->with('groups', $this->groupService->getGroups())
-                ->with('count', $this->getCountFriendshipRequest())
-                ->with('friendshipSuggestions', $this->getFriendshipSuggestions())
-                ->with('friendshipRequesteds', $this->getFriendshipRequesteds())
+                ->with('count', $this->friendshipService->getCountFriendshipRequest())
+                ->with('friendshipSuggestions', $this->friendshipService->getFriendshipSuggestions())
+                ->with('friendshipRequesteds', $this->friendshipService->getFriendshipRequesteds())
                 ->with('friendsPosts', $this->getFriendsPosts())
                 ->with('elapsedTime', $this->dateService->getElapsedTime())
-                ->with('comments', $this->getCommentsByPostId())
+                ->with('comments', $this->commentService->getCommentsByPostId())
                 ->with('userHasLikedPost', $this->userHasLikedPost());
         }
     }
@@ -53,7 +63,7 @@ class HomepageController extends Controller
     public function store(UserRegistrationRequest $request) {
     	$request->validated();
 
-        if(!checkdate($request->input('month'), $request->input('day'), $request->input('year'))) {
+        if(!$this->dateService->isValidDate($request->input('month'), $request->input('day'), $request->input('year'))) {
             return redirect()->route('homepage.index')
                 ->with('date_error', 'Informe uma data válida');
         }
@@ -64,7 +74,7 @@ class HomepageController extends Controller
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
             'gender' => $request->input('gender'),
-            'birthday' => date('Y-m-d', strtotime($request->input('day').'-'.$request->input('month').'-'.$request->input('year'))),
+            'birthday' => $this->dateService->formatDate($request->input('day'), $request->input('month'), $request->input('year')),
             'slug' => $this->generateSlug($request->input('first_name'), $request->input('last_name'))
         ]);
         $setting = Setting::create([
@@ -99,92 +109,9 @@ class HomepageController extends Controller
         return redirect()->route('homepage.index');
     }
 
-    public function getFriendsId()
-    {
-        $friendsId = Auth::user()
-            ->friends()
-            ->limit(8)
-            ->select('friend_id')
-            ->get()
-            ->toArray();
-        return $friendsId;
-    }
-
-    public function getAllFriendsId()
-    {
-        $friendsId = Auth::user()
-            ->friends()
-            ->select('friend_id')
-            ->get()
-            ->toArray();
-        return $friendsId;
-    }
-
-    public function getFriends() 
-    {
-        $friends = User::whereIn('users.id', $this->getFriendsId())
-            ->select('first_name', 'last_name', 'slug', 'profile_picture')
-            ->join('settings', 'settings.user_id', '=', 'users.id')
-            ->get();
-        return $friends;
-    }
-
-    public function getCountFriendshipRequest()
-    {
-        $count = Auth::user()
-            ->friendshipRequesteds()
-            ->select('id')
-            ->count();
-        return $count;
-    }
-
-    public function getFriendshipSuggestions($limit = 3)
-    {
-        $friendshipSuggestions = User::whereNotIn('users.id', $this->getAllFriendsId())
-            ->select('first_name', 'last_name', 'slug', 'users.id', 'profile_picture')
-            ->where('users.id', '!=', Auth::user()->id)
-            ->whereNotIn('users.id', $this->getFriendshipRequests())
-            ->whereNotIn('users.id', $this->getIdWhoAskedForRequest())
-            ->join('settings', 'users.id', '=','settings.user_id')
-            ->limit($limit)
-            ->get();
-        return $friendshipSuggestions;
-    }
-
-    public function getFriendshipRequesteds()
-    {
-        $friendshipRequesteds = $this->getIdWhoAskedForRequest();
-        $friendshipRequesteds = User::whereIn('users.id', $friendshipRequesteds)
-            ->select('users.id', 'first_name', 'last_name', 'slug', 'profile_picture')
-            ->join('settings', 'users.id', '=', 'settings.user_id')
-            ->limit(3)
-            ->get();
-        return $friendshipRequesteds;
-    }
-
-    public function getFriendshipRequests()
-    {
-        $friendshipRequests = Auth::user()
-            ->friendshipRequests()
-            ->select('requested_user_id')
-            ->get()
-            ->toArray();
-        return $friendshipRequests;
-    }
-
-    public function getIdWhoAskedForRequest()
-    {
-        $idWhoAskedForRequest = Auth::user()
-            ->friendshipRequesteds()
-            ->select('request_user_id')
-            ->get()
-            ->toArray();
-        return $idWhoAskedForRequest;
-    }
-
     public function getFriendsPosts()
     {
-        $friendsPosts = UserPost::whereIn('user_has_posts.user_id', $this->getAllFriendsId())
+        $friendsPosts = UserPost::whereIn('user_has_posts.user_id', $this->friendService->getAllFriendsId())
             ->select('user_has_posts.id', 'users.first_name', 'users.last_name', 'users.slug', DB::raw('user_has_posts.user_id as user_has_posts_user_id'), 'user_has_posts.post', 'user_has_posts.created_at', 
                 DB::raw('COUNT(DISTINCT user_posts_has_likes.id) as count_likes'), 
                 DB::raw('COUNT(DISTINCT user_posts_has_comments.id) as count_comments'),
@@ -210,31 +137,6 @@ class HomepageController extends Controller
                 'post_id' => $postId
             ])->count();
             return $userLikedPost;
-        };
-    }
-
-    public function getUser() {
-        $user = Auth::user()
-            ->select('first_name', 'last_name', 'slug', 'profile_picture')
-            ->join('settings', 'users.id', '=', 'settings.user_id')
-            ->where('users.id', Auth::user()->id)
-            ->first();
-        return $user;
-    }
-
-    public function getCommentsByPostId() {
-        return function($postId) {
-            $comments = UserPostComment::where('post_id', $postId)
-            ->select('user_posts_has_comments.id', 'user_posts_has_comments.post_id',
-            'user_posts_has_comments.user_id', 'user_posts_has_comments.comment',
-            'user_posts_has_comments.created_at', 'users.first_name', 'users.last_name',
-            'users.slug', 'settings.profile_picture')
-            ->join('users', 'users.id', '=', 'user_posts_has_comments.user_id')
-            ->join('settings', 'settings.user_id', '=', 'users.id')
-            ->whereNull('user_posts_has_comments.parent_id')
-            ->limit(2)
-            ->get();
-            return $comments;
         };
     }
 

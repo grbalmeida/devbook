@@ -3,6 +3,16 @@
 namespace App\Services;
 
 class DateService {
+    public function isValidDate($day, $month, $year)
+    {
+        return checkdate($month, $day, $year);
+    }
+
+    public function formatDate($day, $month, $year) 
+    {
+        return date('Y-m-d', strtotime($day.'-'.$month.'-'.$year));
+    }
+
 	public static function getElapsedTime() 
     {
         return function($time) {

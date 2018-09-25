@@ -9,11 +9,17 @@ use App\Models\Users\FriendshipRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Users\Relationship;
 use App\Http\Controllers\HomepageController;
-use App\Services\DateService;
-use App\Services\GroupService;
+use App\Services\FriendService;
+use App\Services\FriendshipService;
 
 class AddFriendController extends Controller
 {
+
+	public function __construct(FriendService $friendService, FriendshipService $friendshipService) {
+		$this->friendService = $friendService;
+		$this->friendshipService = $friendshipService;
+	}
+
 	public function store($requestedUserId)
 	{
 		$user = User::find($requestedUserId);
@@ -91,11 +97,10 @@ class AddFriendController extends Controller
 		foreach($friendshipSuggestions as $id => $friendship) {
 			array_push($friendshipSuggestion, $friendship['id']);
 		}
-		$homepageController = new HomepageController(new DateService(), new GroupService());
 		$anotherFriendshipSuggestion = User::whereNotIn('users.id', $friendshipSuggestion)
-			->whereNotIn('users.id', $homepageController->getFriendshipRequests())
-			->whereNotIn('users.id', $homepageController->getIdWhoAskedForRequest())
-			->whereNotIn('users.id', $homepageController->getAllFriendsId())
+			->whereNotIn('users.id', $this->friendshipService->getFriendshipRequests())
+			->whereNotIn('users.id', $this->friendshipService->getIdWhoAskedForRequest())
+			->whereNotIn('users.id', $this->friendService->getAllFriendsId())
 			->where('users.id', '!=', Auth::user()->id)
 			->select('users.id', 'users.first_name', 'users.last_name',
 					'users.slug', 'settings.profile_picture')
