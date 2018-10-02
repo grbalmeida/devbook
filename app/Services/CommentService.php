@@ -4,7 +4,8 @@ namespace App\Services;
 
 use App\Models\Users\UserPostComment;
 
-class CommentService {
+class CommentService 
+{
 	public function getCommentsByPostId() {
         return function($postId) {
             $comments = UserPostComment::where('post_id', $postId)

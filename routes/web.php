@@ -45,10 +45,16 @@ Route::prefix('/profile/{slug}')->group(function($slug) {
 Route::prefix('/settings')->group(function() {
 	Route::get('/', 'SettingController@index')
 		->name('settings.index');
+	Route::put('/', 'SettingController@updatePersonalInformation')
+		->name('settings.updatePersonalInformation');
 	Route::get('/password', 'SettingController@password')
 		->name('settings.password');
+	Route::put('/password', 'SettingController@updatePassword')
+		->name('settings.updatePassword');
 	Route::get('/privacy', 'SettingController@privacy')
 		->name('settings.privacy');
+	Route::put('/privacy', 'SettingController@updatePrivacy')
+		->name('settings.updatePrivacy');
 });
 
 Route::post('/add-friend/{requestedUserId}', 'Ajax\AddFriendController@store')

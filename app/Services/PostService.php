@@ -6,7 +6,8 @@ use App\Models\Users\UserPost;
 use App\Services\FriendService;
 use Illuminate\Support\Facades\DB;
 
-class PostService {
+class PostService 
+{
 
 	public function __construct(FriendService $friendService) {
 		$this->friendService = $friendService;

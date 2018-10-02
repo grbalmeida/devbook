@@ -16,9 +16,9 @@ class Permissions extends Migration
         Schema::create('permissions', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->boolean('friendship_request');
-            $table->boolean('friends_list');
-            $table->boolean('posts');
+            $table->boolean('friendship_request')->default('0');
+            $table->enum('friends_list', ['1', '2', '3'])->default('1');
+            $table->enum('posts', ['1', '2', '3'])->default('1');
             $table->timestamps();
             $table->softDeletes();
 

@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Users\User;
 use App\Services\FriendService;
 
-class FriendshipService {
+class FriendshipService 
+{
 
     public function __construct(FriendService $friendService) {
         $this->friendService = $friendService;

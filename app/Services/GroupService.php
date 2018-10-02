@@ -6,7 +6,8 @@ use App\Models\Groups\Group;
 use App\Models\Groups\GroupMember;
 use Illuminate\Support\Facades\Auth;
 
-class GroupService {
+class GroupService 
+{
 	public function getGroups()
     {
         $groupsId = GroupMember::where('user_id', Auth::user()->id)

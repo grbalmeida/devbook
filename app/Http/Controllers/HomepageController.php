@@ -17,6 +17,7 @@ use App\Services\UserService;
 use App\Services\CommentService;
 use App\Services\LikeService;
 use App\Services\PostService;
+use App\Services\AuthService;
 
 class HomepageController extends Controller
 {
@@ -24,7 +25,7 @@ class HomepageController extends Controller
     public function __construct(DateService $dateService, GroupService $groupService, 
         FriendService $friendService, FriendshipService $friendshipService, 
         UserService $userService, CommentService $commentService, 
-        LikeService $likeService, PostService $postService)
+        LikeService $likeService, PostService $postService, AuthService $authService)
     {
         $this->dateService = $dateService;
         $this->groupService = $groupService;
@@ -34,6 +35,7 @@ class HomepageController extends Controller
         $this->commentService = $commentService;
         $this->likeService = $likeService;
         $this->postService = $postService;
+        $this->authService = $authService;
     }
 
     public function index()
@@ -84,29 +86,18 @@ class HomepageController extends Controller
         $permission = Permission::create([
             'user_id' => $user->id
         ]);
-        return $this->auth($request, 'email', 'password');
+        return $this->authService->auth($request, 'email', 'password');
     }
 
     public function login(UserLoginRequest $request)
     {
         $request->validated();
-        return $this->auth($request, 'email_login', 'password_login');
-    }
-
-    public function auth($request, $email, $password)
-    {
-        $auth = Auth::attempt([
-            'email' => $request->input($email),
-            'password' => $request->input($password)
-        ]);
-        return redirect()
-            ->route('homepage.index')
-            ->with('logged', $auth);
+        return $this->authService->auth($request, 'email_login', 'password_login');
     }
 
     public function logout()
     {
-        Auth::logout();
+        $this->authService->logout();
         return redirect()->route('homepage.index');
     }
 

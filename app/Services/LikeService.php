@@ -4,7 +4,8 @@ namespace App\Services;
 
 use App\Models\Users\UserPostLike;
 
-class LikeService {
+class LikeService 
+{
 	public function userHasLikedPost()
     {
         return function($userId, $postId) {

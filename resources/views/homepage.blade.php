@@ -71,32 +71,8 @@
 							{{ $errors->first('password') }}
 						</div>
 					@endif
-					<div class="form-inline mb-3">
-						<label>Data de nascimento</label>
-						<div class="w-100 mb-2"></div>
-						<div>
-							<select class="form-control {{ session('date_error') ? 'is-invalid' : '' }}" name="day">
-								@foreach($days as $day)
-									<option value="{{ $day }}" {{ old('day') == $day ? 'selected' : '' }}>{{ $day }}</option>
-								@endforeach
-							</select>
-							<select class="form-control {{ session('date_error') ? 'is-invalid' : '' }}" name="month">
-								@foreach($months as $index => $month)2
-									<option value="{{ ($index + 1) }}" {{ old('month') == $month ? 'selected' : '' }}>{{ $month }}</option>
-								@endforeach
-							</select>
-							<select class="form-control {{ session('date_error') ? 'is-invalid' : '' }}" name="year">
-								@foreach($years as $year)
-									<option value="{{ $year }}" {{ old('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
-								@endforeach	
-							</select>
-						</div>
-					</div>
-					@if(session('date_error'))
-						<div class="invalid-feedback d-block">
-							{{ session('date_error') }}
-						</div>
-					@endif
+					@component('components.calendar', ['days' => $days, 'months' => $months, 'years' => $years])
+					@endcomponent
 					<input type="radio" name="gender" class="mr-1" value="0" @if(!old('gender')) checked @endif>Feminino
 					<input type="radio" name="gender" class="mr-1" value="1" @if(old('gender')) checked @endif>Masculino
 					@if($errors->has('gender'))

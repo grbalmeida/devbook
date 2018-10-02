@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
-class DateService {
-    public function isValidDate($day, $month, $year)
+class DateService 
+{
+    public function isValidDate($month, $day, $year)
     {
         return checkdate($month, $day, $year);
     }

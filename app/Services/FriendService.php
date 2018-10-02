@@ -5,7 +5,8 @@ namespace App\Services;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Users\User;
 
-class FriendService {
+class FriendService 
+{
 	public function getFriendsId()
     {
         $friendsId = Auth::user()
