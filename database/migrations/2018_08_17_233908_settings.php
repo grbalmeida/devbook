@@ -22,6 +22,10 @@ class Settings extends Migration
             $table->string('hometown', 150)->nullable();
             $table->string('actual_city', 150)->nullable();
             $table->string('occupation', 150)->nullable();
+            $table->enum('relationship_status', ['1', '2', '3', '4', '5', '6', '7', '8', '9'])->default('1');
+            $table->string('company')->nullable();
+            $table->string('course')->nullable();
+            $table->string('educational_institution')->nullable();
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users');
