@@ -33,17 +33,57 @@ class ProfileController extends Controller
 
     public function index($slug)
     {
-        $userExists = $this->userService->getUserVisited($slug);
-        if($userExists) {
-            return view('profile.index')
-            ->with($this->getArrayComponentVariables($userExists));
+        $retorno = $this->ifUserExistsReturnView($slug);
+        if(!$retorno) {
+            return redirect()->route('homepage.index');
         }
-    	return redirect()->route('homepage.index');
+        return view('profile.index')
+            ->with($this->getArrayComponentVariables($slug, $retorno));
     }
 
-    public function getArrayComponentVariables($user)
+    public function getAbout($slug)
+    {
+        $retorno = $this->ifUserExistsReturnView($slug);
+        if(!$retorno) {
+            return redirect()->route('homepage.index');
+        }
+        return view('profile.about')
+            ->with($this->getArrayComponentVariables($slug, $retorno));
+    }
+
+    public function getFriends($slug)
+    {
+        $retorno = $this->ifUserExistsReturnView($slug);
+        if(!$retorno) {
+            return redirect()->route('homepage.index');
+        }
+        return view('profile.friends')
+            ->with($this->getArrayComponentVariables($slug, $retorno));
+    }
+
+    public function getPhotos($slug)
+    {
+        $retorno = $this->ifUserExistsReturnView($slug);
+        if(!$retorno) {
+            return redirect()->route('homepage.index');
+        }
+        return view('profile.photos')
+            ->with($this->getArrayComponentVariables($slug, $retorno));
+    }
+
+    public function ifUserExistsReturnView($slug)
+    {
+        $userExists = $this->userService->getUserVisited($slug);
+        if($userExists) {
+            return $userExists;
+        }
+        return false;
+    }
+
+    public function getArrayComponentVariables($slug, $user)
     {
     	return [
+            'slug' => $slug,
     		'user' => $this->userService->getUser(),
     		'count' => $this->friendshipService->getCountFriendshipRequest(),
     		'friendshipRequesteds' => $this->friendshipService->getFriendshipRequesteds(),
