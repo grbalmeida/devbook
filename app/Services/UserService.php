@@ -33,7 +33,7 @@ class UserService
         $informations = Setting::where('user_id', $user)
             ->select('hometown', 'actual_city', 'occupation'
             , 'relationship_status', 'company', 'course'
-            , 'educational_institution')
+            , 'educational_institution', 'profile_picture')
             ->first();
         return $informations;
     }
