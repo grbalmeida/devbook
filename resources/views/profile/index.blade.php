@@ -2,23 +2,8 @@
 @endcomponent
 	@component('components.nav', ['user' => $user, 'count' => $count, 'friendshipRequesteds' => $friendshipRequesteds])
 		@endcomponent
-	<div class="container card mt-2">
-		<div class="card-body">
-			aaaa
-		</div>
-	</div>
-	<div class="container mt-2">
-		<div class="row">
-			<div class="col-6"></div>
-			<div class="col-6">
-				<div class="row">
-					<div class="col-4">Sobre</div>
-					<div class="col-4">Amigos</div>
-					<div class="col-4">Fotos</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	@component('components.profile-header', ['slug' => $slug, 'informations' => $informations])
+	@endcomponent
 	<div class="container mt-2">
 		<div class="row">
 			<div class="col-4">
