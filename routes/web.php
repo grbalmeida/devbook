@@ -42,6 +42,16 @@ Route::prefix('/profile/{slug}')->group(function($slug) {
 		->name('profile.photos');
 });	
 
+
+Route::put('/about/biography', 'ProfileController@changeBiography')
+	->name('profile.update-biography');
+Route::put('/about/relationship_status', 'ProfileController@changeRelationshipStatus')
+	->name('profile.update-relationship-status');
+Route::put('/about/cities', 'ProfileController@changeCities')
+	->name('profile.cities');
+Route::put('/about/word-education', 'ProfileController@changeWorkAndEducation')
+	->name('profile.work-education');
+
 Route::prefix('/settings')->group(function() {
 	Route::get('/', 'SettingController@index')
 		->name('settings.index');
