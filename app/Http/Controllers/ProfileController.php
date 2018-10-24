@@ -11,6 +11,8 @@ use App\Services\DateService;
 use App\Services\LikeService;
 use App\Services\CommentService;
 use App\Services\PhotoService;
+use App\Models\Users\Setting;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -94,7 +96,48 @@ class ProfileController extends Controller
             'comments' => $this->commentService->getCommentsByPostId(),
             'photos' => $this->photoService->getPhotosUserVisited($user->id),
             'informations' => $this->userService->getInformationsAboutUserVisited($user->id),
-            'getRelationshipStatus' => $this->userService->getRelationshipStatusUserVisited()
+            'getRelationshipStatusUserVisited' => $this->userService->getRelationshipStatusUserVisited(),
+            'getRelationshipStatus' => $this->userService->getRelationshipStatus()
     	];
     }
+
+    public function changeBiography(Request $request)
+    {
+        Auth::user()->settings->update([
+            'biography' => $request->input('biography')
+        ]);
+        return redirect()->route('profile.about', Auth::user()->slug)
+            ->with('active', 'biography');
+    }
+
+    public function changeRelationshipStatus(Request $request)
+    {
+        Auth::user()->settings->update([
+            'relationship_status' => $request->input('relationship_status')
+        ]);
+        return redirect()->route('profile.about', Auth::user()->slug)
+            ->with('active', 'relationship');
+    }
+
+    public function changeCities(Request $request)
+    {
+        Auth::user()->settings->update([
+            'actual_city' => $request->input('actual_city'),
+            'hometown' => $request->input('hometown')
+        ]);
+        return redirect()->route('profile.about', Auth::user()->slug)
+            ->with('active', 'relationship');
+    }
+
+    public function changeWorkAndEducation(Request $request)
+    {
+        Auth::user()->settings->update([
+            'occupation' => $request->input('occupation'),
+            'company' => $request->input('company'),
+            'course'=> $request->input('course'),
+            'educational_institution' => $request->input('educational_institution')
+        ]);
+        return redirect()->route('profile.about', Auth::user()->slug)
+            ->with('active', 'work-education');
+    }    
 }
