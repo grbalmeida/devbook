@@ -17,11 +17,61 @@
 				</div>
 			</div>
 			<div class="col-8">
-			  <div data-div-id="general">Geral</div>
-			  <div hidden="true" data-div-id="work-education">Trabalho e Educação</div>
-			  <div hidden="true" data-div-id="places">Lugares onde Morou</div>
-			  <div hidden="true" data-div-id="relationship">Relacionamento</div>
-			  <div hidden="true" data-div-id="biography">Biografia</div>
+			  <div class="mt-2" data-div-id="general">Geral</div>
+			  <div class="mt-2" hidden="true" data-div-id="work-education">
+			  	@if(Auth::user()->slug == $slug)
+			  	<form method="POST" action="{{ route('profile.work-education') }}">
+			  		@csrf
+			  		<input type="hidden" name="_method" value="PUT">
+			  		<label for="ocuppation">Profissão</label>
+			  		<input type="text" name="occupation" class="form-control col-6" value="{{ Auth::user()->settings->occupation }}">
+			  		<label for="company">Empresa</label>
+			  		<input type="text" name="company" class="form-control col-6" value="{{ Auth::user()->settings->company }}">
+			  		<label for="course">Curso</label>
+			  		<input type="text" name="course" class="form-control col-6" value="{{ Auth::user()->settings->course }}">
+			  		<label for="educational_education">Instituição de Ensino</label>
+			  		<input type="text" name="educational_institution" class="form-control col-6" value="{{ Auth::user()->settings->educational_institution }}">
+			  		<input type="submit" value="Salvar alterações" class="btn btn-success mt-2">
+			  	</form>
+			  	@endif
+			  </div>
+			  <div class="mt-2" hidden="true" data-div-id="places">
+			  	@if(Auth::user()->slug == $slug)
+			  	<form method="POST" action="{{ route('profile.cities') }}">
+			  		@csrf
+			  		<input type="hidden" name="_method" value="PUT">
+			  		<label for="actual-city">Cidade Atual</label>
+			  		<input type="text" name="actual_city" id="actual-city" class="form-control col-6" value="{{ Auth::user()->settings->actual_city }}">
+			  		<label class="mt-2" for="hometown">Cidade Natal</label>
+			  		<input type="text" name="hometown" id="hometown" class="form-control col-6" value="{{ Auth::user()->settings->hometown }}">
+			  		<input class="btn btn-success mt-3 mb-2" type="submit" value="Salvar alterações">
+			  	</form>
+			  	@endif
+			  </div>
+			  <div class="mt-2" hidden="true" data-div-id="relationship">
+			  	@if(Auth::user()->slug == $slug)
+			  	<form method="POST" action="{{ route('profile.update-relationship-status') }}">
+			  		@csrf
+			  		<input type="hidden" name="_method" value="PUT">
+			  		<select name="relationship_status" class="form-control col-6">
+			  		@foreach($getRelationshipStatus as $index => $status)
+			  			<option value="{{ $index }}" @if($index == Auth::user()->settings->relationship_status) selected @endif>{{ $status }}</option>
+			  		@endforeach
+				  	</select>
+				  	<input type="submit" value="Salvar alterações" class="btn btn-success mt-2">
+			  	</form>
+			  	@endif
+			  </div>
+			  <div class="mt-2" hidden="true" data-div-id="biography">
+			  	@if(Auth::user()->slug == $slug)
+			  	<form method="POST" action="{{ route('profile.update-biography') }}">
+			  		@csrf
+			  		<input type="hidden" name="_method" value="PUT">
+			  		<textarea name="biography" class="form-control mb-2 col-6" style="resize: none;">{{ Auth::user()->settings->biography }}</textarea>
+			  		<input type="submit" value="Salvar alterações" class="btn btn-success">
+			  	</form>
+			  	@endif
+			  </div>
 			</div>
 		</div>
 	</div>
