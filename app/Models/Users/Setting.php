@@ -16,6 +16,10 @@ class Setting extends Model
     	'biography',
     	'hometown',
     	'actual_city',
-    	'occupation'	
+    	'occupation',
+        'relationship_status',
+        'company',
+        'course',
+        'educational_institution'	
     ];
 }
