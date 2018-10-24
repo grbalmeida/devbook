@@ -42,7 +42,7 @@
 							</div>
 						@endif
 						<div>
-							<i class="fas fa-heart"></i> {{ $getRelationshipStatus($informations->relationship_status) }}
+							<i class="fas fa-heart"></i> {{ $getRelationshipStatusUserVisited($informations->relationship_status) }}
 						</div>
 					</div>
 				</div>
