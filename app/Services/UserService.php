@@ -41,7 +41,13 @@ class UserService
     public function getRelationshipStatusUserVisited()
     { 
         return function($status) {
-            $relationshipStatus = [
+            return $this->getRelationshipStatus()[$status];
+        };
+    }
+
+    public function getRelationshipStatus()
+    {
+        return [
                 '1' => 'Solteiro',
                 '2' => 'Em um relacionamento sério',
                 '3' => 'Noivo',
@@ -51,8 +57,6 @@ class UserService
                 '7' => 'Separado',
                 '8' => 'Divorciado',
                 '9' => 'Viúvo'
-            ];
-            return $relationshipStatus[$status];
-        };
+        ];
     }
 }
