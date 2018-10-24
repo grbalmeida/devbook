@@ -6,7 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Groups\GroupMember;
 use Permission;
-use Setting;
+use App\Models\Users\Setting;
 use App\Models\Users\FriendshipRequest;
 use App\Models\Users\Relationship;
 use UserPost;
