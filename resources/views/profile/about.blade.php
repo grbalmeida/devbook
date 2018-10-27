@@ -24,13 +24,13 @@
 			  		@csrf
 			  		<input type="hidden" name="_method" value="PUT">
 			  		<label for="ocuppation">Profissão</label>
-			  		<input type="text" name="occupation" class="form-control col-6" value="{{ Auth::user()->settings->occupation }}">
+			  		<input type="text" name="occupation" class="form-control col-6" value="{{ $informations->occupation }}">
 			  		<label for="company">Empresa</label>
-			  		<input type="text" name="company" class="form-control col-6" value="{{ Auth::user()->settings->company }}">
+			  		<input type="text" name="company" class="form-control col-6" value="{{ $informations->company }}">
 			  		<label for="course">Curso</label>
-			  		<input type="text" name="course" class="form-control col-6" value="{{ Auth::user()->settings->course }}">
+			  		<input type="text" name="course" class="form-control col-6" value="{{ $informations->course }}">
 			  		<label for="educational_education">Instituição de Ensino</label>
-			  		<input type="text" name="educational_institution" class="form-control col-6" value="{{ Auth::user()->settings->educational_institution }}">
+			  		<input type="text" name="educational_institution" class="form-control col-6" value="{{ $informations->educational_institution }}">
 			  		<input type="submit" value="Salvar alterações" class="btn btn-success mt-2">
 			  	</form>
 			  	@endif
@@ -41,9 +41,9 @@
 			  		@csrf
 			  		<input type="hidden" name="_method" value="PUT">
 			  		<label for="actual-city">Cidade Atual</label>
-			  		<input type="text" name="actual_city" id="actual-city" class="form-control col-6" value="{{ Auth::user()->settings->actual_city }}">
+			  		<input type="text" name="actual_city" id="actual-city" class="form-control col-6" value="{{ $informations->actual_city }}">
 			  		<label class="mt-2" for="hometown">Cidade Natal</label>
-			  		<input type="text" name="hometown" id="hometown" class="form-control col-6" value="{{ Auth::user()->settings->hometown }}">
+			  		<input type="text" name="hometown" id="hometown" class="form-control col-6" value="{{ $informations->hometown }}">
 			  		<input class="btn btn-success mt-3 mb-2" type="submit" value="Salvar alterações">
 			  	</form>
 			  	@endif
@@ -55,7 +55,7 @@
 			  		<input type="hidden" name="_method" value="PUT">
 			  		<select name="relationship_status" class="form-control col-6">
 			  		@foreach($getRelationshipStatus as $index => $status)
-			  			<option value="{{ $index }}" @if($index == Auth::user()->settings->relationship_status) selected @endif>{{ $status }}</option>
+			  			<option value="{{ $index }}" @if($index == $informations->relationship_status) selected @endif>{{ $status }}</option>
 			  		@endforeach
 				  	</select>
 				  	<input type="submit" value="Salvar alterações" class="btn btn-success mt-2">
@@ -67,7 +67,7 @@
 			  	<form method="POST" action="{{ route('profile.update-biography') }}">
 			  		@csrf
 			  		<input type="hidden" name="_method" value="PUT">
-			  		<textarea name="biography" class="form-control mb-2 col-6" style="resize: none;">{{ Auth::user()->settings->biography }}</textarea>
+			  		<textarea name="biography" class="form-control mb-2 col-6" style="resize: none;">{{ $informations->biography }}</textarea>
 			  		<input type="submit" value="Salvar alterações" class="btn btn-success">
 			  	</form>
 			  	@endif
@@ -110,3 +110,5 @@
 
 	})()
 </script>
+@component('components.footer')
+@endcomponent

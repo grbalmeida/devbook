@@ -4,3 +4,5 @@
 		@endcomponent
 	@component('components.profile-header', ['slug' => $slug, 'informations' => $informations])
 	@endcomponent
+@component('components.footer')
+@endcomponent
