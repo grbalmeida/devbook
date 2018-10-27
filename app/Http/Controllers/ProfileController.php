@@ -126,7 +126,7 @@ class ProfileController extends Controller
             'hometown' => $request->input('hometown')
         ]);
         return redirect()->route('profile.about', Auth::user()->slug)
-            ->with('active', 'relationship');
+            ->with('active', 'places');
     }
 
     public function changeWorkAndEducation(Request $request)
