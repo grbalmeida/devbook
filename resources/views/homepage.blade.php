@@ -20,8 +20,8 @@
 			<form method="POST" action="{{ route('homepage.login') }}">
 				@csrf
 				<div class="form-inline">
-					<input type="text" name="email_login" class="form-control mr-2 {{ $errors->has('email_login') ? 'is-invalid' : '' }}" placeholder="E-mail" value="{{ old('email_login') }}">
-					<input type="password" name="password_login" class="form-control mr-2 {{ $errors->has('password_login') ? 'is-invalid' : '' }}" placeholder="Senha">
+					<input type="text" name="email_login" class="mb-1 form-control mr-2 {{ $errors->has('email_login') ? 'is-invalid' : '' }}" placeholder="E-mail" value="{{ old('email_login') }}">
+					<input type="password" name="password_login" class="mb-1 form-control mr-2 {{ $errors->has('password_login') ? 'is-invalid' : '' }}" placeholder="Senha">
 					<button type="submit" class="btn btn-success">Logar</button>
 				</div>
 				@if($errors->has('email_login') || $errors->has('password_login'))
@@ -35,7 +35,7 @@
 			</form>
 		</nav>
 		<div class="container-fluid d-flex flex-row-reverse">
-			<div class="card mt-5 w-50 px-4">
+			<div class="card mt-5 col-12 col-lg-7 col-md-7 col-sm-12 px-4">
 				<div class="card-body">
 					<div class="h4">Cadastre-se agora</div>
 				</div>
