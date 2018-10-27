@@ -4,21 +4,29 @@
 		@endcomponent
 	@component('components.profile-header', ['slug' => $slug, 'informations' => $informations])
 	@endcomponent
+@php 
+	function hiddenDivIfIdNotEqualSession($id) {
+		if(session('active') == null || $id != session('active')) {
+			return true;
+		}
+		return false;
+	}
+@endphp
 <div class="container mt-2">
 	<div class="card">
 		<div class="row">
 			<div class="col-4">
 				<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-				  <a class="nav-link active" data-nav id="general">Geral</a>
-				  <a class="nav-link" data-nav id="work-education">Trabalho e Educação</a>
-				  <a class="nav-link" data-nav id="places">Lugares onde Morou</a>
-				  <a class="nav-link" data-nav id="relationship">Relacionamento</a>
-				  <a class="nav-link" data-nav id="biography">Biografia</a>
+				  <a class="nav-link @if(!session('active')) active @endif" data-nav id="general">Geral</a>
+				  <a class="nav-link @if(session('active') == 'work-education') active @endif" data-nav id="work-education">Trabalho e Educação</a>
+				  <a class="nav-link @if(session('active') == 'places') active @endif" data-nav id="places">Lugares onde Morou</a>
+				  <a class="nav-link @if(session('active') == 'relationship') active @endif" data-nav id="relationship">Relacionamento</a>
+				  <a class="nav-link @if(session('active') == 'biography') active @endif" data-nav id="biography">Biografia</a>
 				</div>
 			</div>
 			<div class="col-8">
-			  <div class="mt-2" data-div-id="general">Geral</div>
-			  <div class="mt-2" hidden="true" data-div-id="work-education">
+			  <div class="mt-2" @if(session('active') != null) hidden="true" @endif data-div-id="general">Geral</div>
+			  <div class="mt-2" @if(hiddenDivIfIdNotEqualSession('work-education')) hidden @endif data-div-id="work-education">
 			  	@if(Auth::user()->slug == $slug)
 			  	<form method="POST" action="{{ route('profile.work-education') }}">
 			  		@csrf
@@ -35,7 +43,7 @@
 			  	</form>
 			  	@endif
 			  </div>
-			  <div class="mt-2" hidden="true" data-div-id="places">
+			  <div class="mt-2" @if(hiddenDivIfIdNotEqualSession('places')) hidden @endif data-div-id="places">
 			  	@if(Auth::user()->slug == $slug)
 			  	<form method="POST" action="{{ route('profile.cities') }}">
 			  		@csrf
@@ -48,7 +56,7 @@
 			  	</form>
 			  	@endif
 			  </div>
-			  <div class="mt-2" hidden="true" data-div-id="relationship">
+			  <div class="mt-2" @if(hiddenDivIfIdNotEqualSession('relationship')) hidden @endif data-div-id="relationship">
 			  	@if(Auth::user()->slug == $slug)
 			  	<form method="POST" action="{{ route('profile.update-relationship-status') }}">
 			  		@csrf
@@ -62,7 +70,7 @@
 			  	</form>
 			  	@endif
 			  </div>
-			  <div class="mt-2" hidden="true" data-div-id="biography">
+			  <div class="mt-2" @if(hiddenDivIfIdNotEqualSession('biography')) hidden @endif data-div-id="biography">
 			  	@if(Auth::user()->slug == $slug)
 			  	<form method="POST" action="{{ route('profile.update-biography') }}">
 			  		@csrf
