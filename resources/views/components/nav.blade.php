@@ -1,7 +1,12 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 <div class="container-fluid">
 	<nav class="navbar navbar-dark bg-primary">
-		<div class="col-6">
+		<div class="col-1">
+			<a href="{{ route('homepage.index') }}">
+				<i class="fab fa-dyalog text-primary" style="font-size: 30px; background-color: white; padding: 5px;"></i>
+			</a>
+		</div>
+		<div class="col-5">
 			<input type="text" name="" placeholder="Buscar" class="form-control col-9">
 		</div>
 		<div class="col-6">
