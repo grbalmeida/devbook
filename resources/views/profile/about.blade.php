@@ -25,8 +25,26 @@
 				</div>
 			</div>
 			<div class="col-8">
-			  <div class="mt-2" @if(session('active') != null) hidden="true" @endif data-div-id="general">Geral</div>
-			  <div class="mt-2" @if(hiddenDivIfIdNotEqualSession('work-education')) hidden @endif data-div-id="work-education">
+			  <div class="mt-3" @if(session('active') != null) hidden="true" @endif data-div-id="general">
+			  	<div class="row">
+			  		<div class="col-8">
+			  			@component('components.profile.about-company', ['informations' => $informations])
+			  			@endcomponent
+				  		@component('components.profile.about-institutional_education', ['informations' => $informations])
+				  		@endcomponent
+				  		@component('components.profile.about-places', ['informations' => $informations])
+				  		@endcomponent
+			  		</div>
+			  		<div class="col-4">
+			  			<div>
+			  				<i class="fas fa-birthday-cake"></i>
+			  				@php $birthday = $userVisited->birthday; @endphp
+			  				{{ date('d', strtotime($birthday)) }} de {{ $months[intval(date('m', strtotime($birthday))) - 1] }} de {{ date('Y', strtotime($birthday)) }}
+			  			</div>
+			  		</div>
+			  	</div>
+			  </div>
+			  <div class="mt-3" @if(hiddenDivIfIdNotEqualSession('work-education')) hidden @endif data-div-id="work-education">
 			  	@if(Auth::user()->slug == $slug)
 			  	<form method="POST" action="{{ route('profile.work-education') }}">
 			  		@csrf
@@ -39,11 +57,22 @@
 			  		<input type="text" name="course" class="form-control col-6" value="{{ $informations->course }}">
 			  		<label for="educational_education">Instituição de Ensino</label>
 			  		<input type="text" name="educational_institution" class="form-control col-6" value="{{ $informations->educational_institution }}">
-			  		<input type="submit" value="Salvar alterações" class="btn btn-success mt-2">
+			  		<input type="submit" value="Salvar alterações" class="btn btn-success mt-2 mb-2">
 			  	</form>
+			  	@else
+			  		<div class="row">
+			  			<div class="col-11">
+			  				<h6>TRABALHO</h6>
+					  		@component('components.profile.about-company', ['informations' => $informations])
+					  		@endcomponent
+					  		<h6 class="mt-2">EDUCAÇÃO</h6>
+					  		@component('components.profile.about-institutional_education', ['informations' => $informations])
+						  	@endcomponent
+			  			</div>
+			  		</div>
 			  	@endif
 			  </div>
-			  <div class="mt-2" @if(hiddenDivIfIdNotEqualSession('places')) hidden @endif data-div-id="places">
+			  <div class="mt-3" @if(hiddenDivIfIdNotEqualSession('places')) hidden @endif data-div-id="places">
 			  	@if(Auth::user()->slug == $slug)
 			  	<form method="POST" action="{{ route('profile.cities') }}">
 			  		@csrf
@@ -54,9 +83,13 @@
 			  		<input type="text" name="hometown" id="hometown" class="form-control col-6" value="{{ $informations->hometown }}">
 			  		<input class="btn btn-success mt-3 mb-2" type="submit" value="Salvar alterações">
 			  	</form>
+			  	@else
+			  		<h6>CIDADE NATAL E ATUAL</h6>
+			  		@component('components.profile.about-places', ['informations' => $informations])
+			  		@endcomponent
 			  	@endif
 			  </div>
-			  <div class="mt-2" @if(hiddenDivIfIdNotEqualSession('relationship')) hidden @endif data-div-id="relationship">
+			  <div class="mt-3" @if(hiddenDivIfIdNotEqualSession('relationship')) hidden @endif data-div-id="relationship">
 			  	@if(Auth::user()->slug == $slug)
 			  	<form method="POST" action="{{ route('profile.update-relationship-status') }}">
 			  		@csrf
@@ -68,9 +101,15 @@
 				  	</select>
 				  	<input type="submit" value="Salvar alterações" class="btn btn-success mt-2">
 			  	</form>
+			  	@else
+			  		<h6>RELACIONAMENTO</h6>
+			  		<div>
+			  			<i class="fas fa-heart" style="font-size: 25px;"></i>
+			  			{{ $getRelationshipStatus[$informations->relationship_status] }}
+			  		</div>
 			  	@endif
 			  </div>
-			  <div class="mt-2" @if(hiddenDivIfIdNotEqualSession('biography')) hidden @endif data-div-id="biography">
+			  <div class="mt-3" @if(hiddenDivIfIdNotEqualSession('biography')) hidden @endif data-div-id="biography">
 			  	@if(Auth::user()->slug == $slug)
 			  	<form method="POST" action="{{ route('profile.update-biography') }}">
 			  		@csrf
@@ -78,6 +117,15 @@
 			  		<textarea name="biography" class="form-control mb-2 col-6" style="resize: none;">{{ $informations->biography }}</textarea>
 			  		<input type="submit" value="Salvar alterações" class="btn btn-success">
 			  	</form>
+			  	@else
+			  		<h6>SOBRE {{ mb_convert_case($userVisited->first_name, MB_CASE_UPPER, 'UTF-8') }}</h6>
+			  		<div>
+				  		@if($informations->biography)	
+				  			{{ $informations->biography }}
+				  		@else
+				  			Nenhum detalhe adicional a ser exibido
+				  		@endif
+			  		</div>
 			  	@endif
 			  </div>
 			</div>

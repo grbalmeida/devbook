@@ -20,7 +20,7 @@ class UserService
     public function getUserVisited($slug)
     {
     	$user = User::where('slug', $slug)
-    		->select('id', 'first_name', 'last_name')
+    		->select('id', 'first_name', 'last_name', 'birthday')
     		->first();
     	if($user) {
     		return $user;

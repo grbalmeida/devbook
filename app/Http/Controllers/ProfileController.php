@@ -97,7 +97,9 @@ class ProfileController extends Controller
             'photos' => $this->photoService->getPhotosUserVisited($user->id),
             'informations' => $this->userService->getInformationsAboutUserVisited($user->id),
             'getRelationshipStatusUserVisited' => $this->userService->getRelationshipStatusUserVisited(),
-            'getRelationshipStatus' => $this->userService->getRelationshipStatus()
+            'getRelationshipStatus' => $this->userService->getRelationshipStatus(),
+            'userVisited' => $this->userService->getUserVisited($slug),
+            'months' => $this->dateService->getFullNameOfMonths()
     	];
     }
 
