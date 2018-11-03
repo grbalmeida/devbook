@@ -38,20 +38,20 @@ class FriendService
         return $friends;
     }
 
-    public function getFriendsUserVisited($userId)
+    public function getFriendsUserVisited($userId, $limit = 8)
     {   
-        $friends = User::whereIn('users.id', $this->getFriendsIdUserVisited($userId))
-            ->select('first_name', 'last_name', 'slug', 'profile_picture')
+        $friends = User::whereIn('users.id', $this->getFriendsIdUserVisited($userId, $limit))
+            ->select('users.id', 'first_name', 'last_name', 'slug', 'profile_picture')
             ->join('settings', 'settings.user_id', '=', 'users.id')
             ->get();
         return $friends;
     }
 
-    public function getFriendsIdUserVisited($userId)
+    public function getFriendsIdUserVisited($userId, $limit = 8)
     {
         $friendsId = Relationship::where('user_id', $userId)
             ->select('friend_id')
-            ->limit(8)
+            ->limit($limit)
             ->get()
             ->toArray();
         return $friendsId;

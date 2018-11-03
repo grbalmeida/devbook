@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Users\User;
 use App\Services\FriendService;
+use App\Models\Users\Relationship;
 
 class FriendshipService 
 {
@@ -64,5 +65,22 @@ class FriendshipService
             ->select('id')
             ->count();
         return $count;
+    }
+
+    public function removeFriendship($requesterId, $requestedId)
+    {
+        $removeFriendshipRequester = Relationship::where([
+            'user_id' => $requesterId,
+            'friend_id' => $requestedId
+        ])->delete();
+        $removeFriendshipRequested = Relationship::where([
+            'user_id' => $requestedId,
+            'friend_id' => $requesterId
+        ])->delete();
+        if($removeFriendshipRequester && $removeFriendshipRequested)
+        {
+            return response($requestedId, 200);
+        }
+        return response($requestedId, 304);
     }
 }

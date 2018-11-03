@@ -111,4 +111,10 @@ class AddFriendController extends Controller
 		return json_encode($anotherFriendshipSuggestion);
 	}
 
+	public function removeFriendship($requestedId)
+	{
+		$requesterId = Auth::user()->id;
+		$remove = $this->friendshipService->removeFriendship($requesterId, $requestedId);
+		return $remove;
+	}
 }
