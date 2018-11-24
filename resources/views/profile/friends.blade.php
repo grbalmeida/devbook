@@ -22,31 +22,36 @@
 	</div>
 	<div class="container mt-2 mb-3">
 		<div class="card">
-			<div class="card-body">
-				@foreach($friends as $friend)
-					<div class="mb-2" style="width: 49%; float: left; margin-right: 0.5%; margin-left: 0.5%;" data-friend-container="{{ $friend->id }}">
-						<div class="row">
-							<div class="col-9">
-								<img src="/images/profile_picture/{{ $friend->profile_picture }}" style="height: 80px; margin-right: 5px;">
-								<span>
-									<a href="{{ route('profile.index', $friend->slug) }}" data-friend-name>{{ $friend->first_name }} {{ $friend->last_name }}</a>
-								</span>
-							</div>
-							@if($slug == Auth::user()->slug)
-								<div class="col-3">
-									<div class="btn-group">
-									  <button type="button" class="btn btn-primary dropdown-toggle mt-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-									    Amigos
-									  </button>
-									  <div class="dropdown-menu">
-									  	<a class="dropdown-item" data-requested-id="{{ $friend->id }}">Desfazer amizade</a>
-									  </div>
-									</div>
+			<div class="card-body" data-card>
+				<div data-no-user-found></div>
+				@if(count($friends) > 0)
+					@foreach($friends as $friend)
+						<div class="mb-2" style="width: 49%; float: left; margin-right: 0.5%; margin-left: 0.5%;" data-friend-container="{{ $friend->id }}">
+							<div class="row">
+								<div class="col-9">
+									<img src="/images/profile_picture/{{ $friend->profile_picture }}" style="height: 80px; margin-right: 5px;">
+									<span>
+										<a href="{{ route('profile.index', $friend->slug) }}" data-friend-name>{{ $friend->first_name }} {{ $friend->last_name }}</a>
+									</span>
 								</div>
-							@endif
+								@if($slug == Auth::user()->slug)
+									<div class="col-3">
+										<div class="btn-group">
+										  <button type="button" class="btn btn-primary dropdown-toggle mt-4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										    Amigos
+										  </button>
+										  <div class="dropdown-menu">
+										  	<a class="dropdown-item" data-requested-id="{{ $friend->id }}">Desfazer amizade</a>
+										  </div>
+										</div>
+									</div>
+								@endif
+							</div>
 						</div>
-					</div>
-				@endforeach
+					@endforeach
+				@else
+					<p class="text-center">Não há amigos para mostrar</p>
+				@endif
 			</div>
 		</div>
 	</div>
@@ -57,6 +62,8 @@
 
 			const divSearch = document.querySelector('[data-search]')
 			const inputSearchFriends = document.querySelector('[data-input-friends]')
+			const card = document.querySelector('[data-card]')
+			const noUserFound = document.querySelector('[data-no-user-found]')
 
 			document.body.addEventListener('click', isLinkWithFriendId)
 			divSearch.addEventListener('click', focusOnInput)
@@ -93,17 +100,27 @@
 
 			function removeFriendContainer(response) {
 				const friendContainer = document.querySelector(`[data-friend-container="${response}"]`)
-				console.log(friendContainer)
 				friendContainer.parentNode.removeChild(friendContainer)
 			}
 
 			function searchFriend() {
+				const userName = inputSearchFriends.value.trim()
 				const allFriends = document.querySelectorAll('[data-friend-name]')
+				const friendsCount = Array.from(allFriends)
+					.filter(friend => friend.textContent.startsWith(userName))
+					.length
+
+				if(friendsCount === 0 && allFriends.length > 0) {
+					const message = `Nenhum resultado para: ${userName}`
+					noUserFound.textContent = message
+				} else {
+					noUserFound.textContent = ''
+				}
 
 				allFriends.forEach(friend => {
 					const name = friend.textContent
 					const container = friend.closest('[data-friend-container]').style
-					if(!name.startsWith(inputSearchFriends.value.trim())) {
+					if(!name.startsWith(userName)) {
 						container.display = 'none'
 					} else {
 						container.display = 'block'
