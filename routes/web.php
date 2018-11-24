@@ -78,3 +78,5 @@ Route::post('add-post/{post}', 'UserPostController@store');
 Route::post('add-remove-like/{postId}', 'UserPostLikeController@addRemoveLike');
 Route::post('add-comment/{postId}/{comment}', 'UserPostCommentController@store');
 Route::delete('undo-friendship/{requestedId}', 'Ajax\AddFriendController@removeFriendship');
+
+Route::get('search-users/{user}', 'UserController@getUsersByName');

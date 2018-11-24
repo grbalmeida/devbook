@@ -7,7 +7,11 @@
 			</a>
 		</div>
 		<div class="col-5">
-			<input type="text" name="" placeholder="Buscar" class="form-control col-9">
+			<input type="text" name="" placeholder="Buscar" class="form-control col-9"
+				data-search-users>
+			<div class="ml-3 dropdown-menu w-50" data-show-users>
+				
+			</div>
 		</div>
 		<div class="col-6">
 			<div class="row">

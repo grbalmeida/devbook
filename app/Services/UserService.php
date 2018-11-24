@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Users\User;
 use App\Models\Users\Setting;
 
@@ -43,6 +44,18 @@ class UserService
         return function($status) {
             return $this->getRelationshipStatus()[$status];
         };
+    }
+
+    public function getUsersByName($name)
+    {
+        $users = User::select(DB::raw("CONCAT(first_name, ' ', last_name) AS full_name"), 'slug', 'settings.profile_picture')
+            ->join('settings', 'users.id', '=', 'settings.user_id')
+            ->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', $name.'%')
+            ->where('users.id', '!=', Auth::user()->id)
+            ->limit(5)
+            ->get()
+            ->toJson();
+        return response($users, 200);
     }
 
     public function getRelationshipStatus()
