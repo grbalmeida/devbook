@@ -3,7 +3,7 @@
 	const friendshipSuggestions = document.querySelector('[data-friendship-suggestions]')
 	const friendshipRequests = document.querySelector('[data-friends-request]')
 	const iconUserFriends = document.querySelector('.fa-user-friends')
-	const dropdownMenu = document.querySelector('.dropdown-menu')
+	const dropdownMenu = document.querySelector('[data-dropdown]')
 
 	document.addEventListener('click', getRequestedUserId)
 	document.addEventListener('click', function(event) {

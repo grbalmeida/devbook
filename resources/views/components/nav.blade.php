@@ -26,7 +26,7 @@
 					  	<button type="button" class="btn btn-primary" data-toggle="dropdown" aria-expanded="false">
 					  		<i class="fas fa-user-friends mr-2 {{ $count > 0 ? 'text-danger' : 'text-dark' }}" style="font-size: 25px;"></i>
 					  	</button>
-					  	<div class="dropdown-menu" data-friends-request>
+					  	<div class="dropdown-menu" data-friends-request data-dropdown>
 						    @if($count == 0)
 						    <a class="dropdown-item">
 						    	Não há solicitações de amizade
@@ -52,7 +52,7 @@
 					<div class="btn-group">
 					  	<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					  	</button>
-					  	<div class="dropdown-menu">
+					  	<div class="dropdown-menu" data-dropdown>
 						    <a class="dropdown-item" href="{{ route('settings.index') }}">Configurações</a>
 						    <div class="dropdown-divider"></div>
 						    <a class="dropdown-item" href="{{ route('homepage.logout') }}">Sair</a>
