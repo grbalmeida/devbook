@@ -50,7 +50,8 @@
 			  		@csrf
 			  		<input type="hidden" name="_method" value="PUT">
 			  		<label for="ocuppation">Profissão</label>
-			  		<input type="text" name="occupation" class="form-control col-6" value="{{ $informations->occupation }}">
+			  		<input type="text" name="occupation" class="form-control col-6" value="{{ $informations->occupation }}" list="jobs" autocomplete="off" data-occupation>
+			  		<datalist id="jobs" data-datalist-jobs></datalist>
 			  		<label for="company">Empresa</label>
 			  		<input type="text" name="company" class="form-control col-6" value="{{ $informations->company }}">
 			  		<label for="course">Curso</label>
@@ -139,6 +140,7 @@
 	</div>
 </div>
 <script src="{{ url('js/search-cities.js') }}"></script>
+<script src="{{ url('js/search-jobs.js') }}"></script>
 <script>
 	(function() {
 
