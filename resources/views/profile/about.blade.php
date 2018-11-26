@@ -78,9 +78,15 @@
 			  		@csrf
 			  		<input type="hidden" name="_method" value="PUT">
 			  		<label for="actual-city">Cidade Atual</label>
-			  		<input type="text" name="actual_city" id="actual-city" class="form-control col-6" value="{{ $informations->actual_city }}">
-			  		<label class="mt-2" for="hometown">Cidade Natal</label>
-			  		<input type="text" name="hometown" id="hometown" class="form-control col-6" value="{{ $informations->hometown }}">
+			  		<input list="actual_city" type="text" name="actual_city" id="actual-city" 
+			  		class="form-control col-6" value="{{ $informations->actual_city }}" 
+			  		data-actual-city autocomplete="off">
+			  		<datalist id="actual_city" data-datalist-actual-city></datalist>
+			  		<label class="mt-2" for="hometown_">Cidade Natal</label>
+			  		<input list="hometown" type="text" name="hometown" id="hometown_" 
+			  		class="form-control col-6" value="{{ $informations->hometown }}" 
+			  		data-hometown autocomplete="off">
+			  		<datalist id="hometown" data-datalist-hometown></datalist>
 			  		<input class="btn btn-success mt-3 mb-2" type="submit" value="Salvar alterações">
 			  	</form>
 			  	@else
@@ -132,7 +138,7 @@
 		</div>
 	</div>
 </div>
-
+<script src="{{ url('js/search-cities.js') }}"></script>
 <script>
 	(function() {
 
